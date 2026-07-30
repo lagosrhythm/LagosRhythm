@@ -43,23 +43,31 @@ export default function AddBlogModal({ setOpenBlogModal, addBlogToUI }: AddBlogM
     }
 
     const uploadImageToCloudinary = async (file: File): Promise<string> => {
-        const formData = new FormData()
-        formData.append("file", file)
-        formData.append("upload_preset", "lagos_rhythm_preset")
-        formData.append("cloud_name", "dwedz2laa")
+        const formData = new FormData();
 
-        const response = await fetch("https://api.cloudinary.com/v1_1/dwedz2laa/image/upload", {
-            method: "POST",
-            body: formData,
-        })
+        formData.append("file", file);
+        formData.append("upload_preset", "lagos_rhythm_preset");
+
+        const response = await fetch(
+            "https://api.cloudinary.com/v1_1/dwedz2laa/image/upload",
+            {
+                method: "POST",
+                body: formData,
+            }
+        );
+
+        const data = await response.json();
+
+        // Log EVERYTHING Cloudinary returns
+        console.log("Status:", response.status);
+        console.log("Cloudinary Response:", data);
 
         if (!response.ok) {
-            throw new Error("Image upload failed")
+            throw new Error(data.error?.message || "Image upload failed");
         }
 
-        const data = await response.json()
-        return data.secure_url
-    }
+        return data.secure_url;
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

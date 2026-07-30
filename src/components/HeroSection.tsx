@@ -38,7 +38,7 @@ export default function HeroSection({ setVideoLoaded, videoLoaded }: HeroSection
       </video>
 
 
-      {!videoLoaded && (<Image src={"/video-image.png"} alt="hero-image" width={500} height={500}  className=" w-full h-full object-cover object-center absolute top-0 left-0 "  />)}
+      {!videoLoaded && (<Image src={"/video-image.png"} alt="hero-image" width={500} height={500} className=" w-full h-full object-cover object-center absolute top-0 left-0 " />)}
 
 
       <div className="w-full h-full absolute bg-black/50 z-10 flex items-center justify-center px-4 py-3">
@@ -59,7 +59,7 @@ export default function HeroSection({ setVideoLoaded, videoLoaded }: HeroSection
               Live the vibe, please the mind!
             </motion.p>
           </div>
-          <Link href={"/exclusive-tour-form"} >
+          <Link href={"/Free_E-Rhythm"} >
             <MotionButton
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}

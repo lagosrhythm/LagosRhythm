@@ -14,7 +14,7 @@ import { bookFormImages, joinAsData, reasonForJoinOptions, referralSourceData, t
 import { useAppContext } from "../../context/AppContext"
 import type { exclusiveBookingDataType } from "@/Types/UserDataType"
 import DatePicker from "react-datepicker"
-import { addDoc, collection} from "firebase/firestore"
+import { addDoc, collection } from "firebase/firestore"
 import { fireDB } from "@/app/config/firebaseClient"
 import { sendConfirmationEmail } from "@/lib/utils"
 import ConfirmationModal from "@/components/ConfirmationModal"
@@ -29,8 +29,8 @@ export default function Page() {
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const maxParticipantCount = populationAmount
   const [loading, setLoading] = useState(false)
-  const minDate = new Date("2025-12-29");
-  const maxDate = new Date("2026-01-02");
+  const minDate = new Date("2026-08-29");
+  const maxDate = new Date("2026-08-29");
   // maxDate.setDate(maxDate.getDate() + 30)
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -108,7 +108,7 @@ export default function Page() {
   const handleFormSubmit = (data: exclusiveBookingDataType) => {
     setPendingFormData(data)
 
-      setShowPaymentModal(true)
+    setShowPaymentModal(true)
   }
 
   // onSubmit signature to only accept data
@@ -265,6 +265,33 @@ export default function Page() {
                 </div>
               ))}
             </div>
+
+
+            <div className="w-full  flex items-center justify-between gap-10 py-10 px-4 my-32 " >
+              <div className="flex-1/2 space-y-3 " >
+                <h1 className="font-semibold text-base md:text-xl font-merienda">Lagos Rhythm Live</h1>
+                <p className="font-medium text-sm md:text-base  font-lato" >A live experience of Freedom Park</p>
+              </div>
+
+              <div className="flex-1/2 flex flex-col items-end justify-end text-end gap-3 " >
+                <Image
+                  src={"/in-person/tour-and-safety.jpg"}
+                  title={"storykeeper image"}
+                  alt="image"
+                  height={300}
+                  width={300}
+                  className="rounded-[10px]"
+                  priority
+                />
+
+
+                <p className="font-medium text-sm md:text-base  font-lato">
+                  Welcome! I'm your Lagos Rhythm Storykeeper. <br />
+                  I'm here to help you experience Lagos differently.</p>
+              </div>
+            </div>
+
+
             <div className="w-full flex flex-col items-center gap-2 justify-center my-5 lg:my-5 text-center">
               <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl font-merienda">BOOK YOUR PACKAGE</h1>
               <p className="font-medium text-base md:text-lg font-lato">Experience Something New Every Moment</p>
@@ -537,7 +564,7 @@ export default function Page() {
                       </span>
                     </>
                   ) :
-                        "Proceed to Payment"
+                    "Proceed to Payment"
                 }
                 type="submit"
                 ariaLabel="Proceed to Payment"
@@ -572,7 +599,7 @@ export default function Page() {
         <TimeConverter baseTime={formData.time} />
 
       </div>
-    </CountryProtectedRoute>
+    </CountryProtectedRoute >
   )
 }
 
