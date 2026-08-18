@@ -152,7 +152,7 @@ export default function Page() {
         discountCode: formData.discountCode,
         // tour details info here
         paidPrice: paidPrice,
-        populationSize: participantsCount,
+        populationSize: participantsCount.toString(),
         tourTheme: selectedTheme,
         tourCompleted: false,
       })

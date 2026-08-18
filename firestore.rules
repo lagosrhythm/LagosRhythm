@@ -124,7 +124,6 @@ service cloud.firestore {
           'subscribedAt',
           'time',
           'discountCode',
-          'subscriptionType',
           'paidPrice',
           'populationSize',
           'tourTheme',
@@ -142,7 +141,6 @@ service cloud.firestore {
         && isValidTimestamp(request.resource.data.subscribedAt)
         && isValidLooseString(request.resource.data.time, 40)
         && isValidLooseString(request.resource.data.discountCode, 40)
-        && isValidString(request.resource.data.subscriptionType, 1, 80)
         && isValidString(request.resource.data.paidPrice, 1, 40)
         && isValidString(request.resource.data.populationSize, 1, 40)
         && isValidString(request.resource.data.tourTheme, 1, 80)
