@@ -17,15 +17,15 @@ import DatePicker from "react-datepicker"
 import { addDoc, collection } from "firebase/firestore"
 import { fireDB } from "@/app/config/firebaseClient"
 import { sendConfirmationEmail } from "@/lib/utils"
+import { getExclusiveTourPrice } from "@/lib/pricing"
 import ConfirmationModal from "@/components/ConfirmationModal"
 import PaymentModal from "@/components/payments/PaymentModal"
 import TimeConverter from "@/components/TimeConverter"
-import CountryProtectedRoute from "@/components/ProtectedRoutes/CountryProtectedRoute"
 import CryptoPaymentModal from "@/components/payments/CryptoPaymentModal"
 
 
 export default function Page() {
-  const { participantsCount, setParticipantsCount, populationAmount, selectedTheme, userData } = useAppContext()
+  const { participantsCount, setParticipantsCount, populationAmount, selectedTheme } = useAppContext()
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const maxParticipantCount = populationAmount
   const [loading, setLoading] = useState(false)
@@ -36,7 +36,7 @@ export default function Page() {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [showCryptoPaymentModal, setShowCryptoPaymentModal] = useState(false)
   const [pendingFormData, setPendingFormData] = useState<exclusiveBookingDataType | null>(null)
-  const [subscriptionType, setSubscriptionType] = useState("")
+  const [isNigeria, setIsNigeria] = useState(false)
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -53,7 +53,7 @@ export default function Page() {
   } = useForm<exclusiveBookingDataType>({
     defaultValues: {
       tourists: Array.from({ length: participantsCount }, () => ({ fullName: "", email: "" })),
-      country: userData?.country ?? "",
+      country: "",
       reasonForJoin: [],
       OtherReason: "",
       joiningAs: "",
@@ -68,6 +68,22 @@ export default function Page() {
 
   const formData = watch()
 
+  // Detect the visitor's country from their IP so we can price the tour
+  // (₦5000 in Nigeria, $10 elsewhere) without requiring anyone to sign in.
+  useEffect(() => {
+    fetch("/api/geo")
+      .then((res) => res.json())
+      .then((data) => {
+        setIsNigeria(!!data.isNigeria)
+        setValue("country", data.isNigeria ? "Nigeria" : (data.countryCode ?? "Other"), { shouldDirty: false })
+      })
+      .catch(() => {
+        setIsNigeria(false)
+        setValue("country", "Other", { shouldDirty: false })
+      })
+  }, [setValue])
+
+  const { price: displayedPrice, currency: displayedCurrency, discountApplied } = getExclusiveTourPrice(isNigeria, formData.discountCode)
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -135,7 +151,6 @@ export default function Page() {
         time: formData.time,
         discountCode: formData.discountCode,
         // tour details info here
-        subscriptionType: subscriptionType,
         paidPrice: paidPrice,
         populationSize: participantsCount,
         tourTheme: selectedTheme,
@@ -237,7 +252,6 @@ export default function Page() {
 
 
   return (
-    <CountryProtectedRoute>
       <div className="w-full flex flex-col h-full text-[#05073C] relative">
         <div className="h-[300px] w-full relative">
           <div className="w-full h-full absolute top-0 left-0 bg-[url('/booking-form/booking-form-hero-bg.jpg')] bg-no-repeat bg-center bg-cover" />
@@ -528,13 +542,27 @@ export default function Page() {
                 )}
               />
 
-              <Input
-                label="Enter discount code (optional)"
-                {...register("discountCode")}
-                name="discountCode"
-                type="text"
-                placeholder="FT743JU7"
-              />
+              <div className="w-full flex flex-col gap-2">
+                <Input
+                  label="Enter discount code (optional)"
+                  {...register("discountCode")}
+                  name="discountCode"
+                  type="text"
+                  placeholder="Discount code"
+                />
+                {formData.discountCode && (
+                  discountApplied ? (
+                    <p className="text-green-600 text-xs md:text-sm">Discount code applied: 20% off</p>
+                  ) : (
+                    <p className="text-red-500 text-xs md:text-sm">Invalid discount code</p>
+                  )
+                )}
+              </div>
+
+              <div className="w-full flex items-center justify-between gap-4 py-3 px-4 rounded-[10px] bg-white">
+                <p className="font-medium text-sm md:text-base font-lato">Price ({isNigeria ? "Nigeria" : "International"})</p>
+                <p className="font-semibold text-lg text-[#EF8F57] font-lato">{displayedPrice} {displayedCurrency}</p>
+              </div>
 
               <div className="w-full flex items-start flex-col gap-3">
                 <Controller
@@ -589,8 +617,7 @@ export default function Page() {
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}
           onPaymentSuccess={completeBooking}
-          subscriptionType={subscriptionType}
-          setSubscriptionType={setSubscriptionType}
+          isNigeria={isNigeria}
           setShowCryptoPaymentModal={setShowCryptoPaymentModal} />
 
 
@@ -599,7 +626,6 @@ export default function Page() {
         <TimeConverter baseTime={formData.time} />
 
       </div>
-    </CountryProtectedRoute >
   )
 }
 

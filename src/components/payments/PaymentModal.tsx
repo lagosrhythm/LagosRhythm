@@ -5,8 +5,7 @@ import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3"
 import { exclusiveBookingDataType } from "@/Types/UserDataType"
 import { useAppContext } from "@/app/context/AppContext"
 import React, { useState, useCallback, useEffect, SetStateAction } from "react"
-import { CustomCheckBox } from "../common/CustomCheckbox"
-import { crewAmountData, customTourPrices } from "@/data/data"
+import { getExclusiveTourPrice } from "@/lib/pricing"
 // import CustomConnectButton from "./CustomConnectButton"
 // import { useAccount } from "wagmi"
 import toast from "react-hot-toast"
@@ -17,25 +16,17 @@ interface PaymentModalProps {
   onPaymentSuccess: (paidPrice: string) => void
   formData: exclusiveBookingDataType
   setShowCryptoPaymentModal: React.Dispatch<SetStateAction<boolean>>
-  subscriptionType: string
-  setSubscriptionType: React.Dispatch<SetStateAction<string>>
+  isNigeria: boolean
 }
 
-// interface ExchangeRateResponse {
-//   result: string;
-//   base_code: string;
-//   conversion_rates: Record<string, number>;
-// }
-
-
-export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formData, subscriptionType, setSubscriptionType }: PaymentModalProps) {
-  const { selectedTheme, price, setPrice, populationType, userData } = useAppContext()
+export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formData, isNigeria }: PaymentModalProps) {
+  const { selectedTheme, price, setPrice } = useAppContext()
   const flutterwavePublicKey = process.env.NEXT_PUBLIC_FLUTTERWAVE_API_KEY
   const [showCurrencyBtns, setShowCurrencyBtns] = useState(false)
   const [paymentCurrency, setPaymentCurrency] = useState<"USD" | "NGN">("USD")
   const [isProcessing, setIsProcessing] = useState(false)
   const [nairaRate, setNairaRate] = useState(0)
-  const country = userData?.country
+  const { currency, price: computedPrice, discountApplied } = getExclusiveTourPrice(isNigeria, formData.discountCode)
   // const account = useAccount()
 
 
@@ -57,38 +48,9 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
 
 
 
-  const pickPrice = (populationType: string, subscriptionType: string, country: string) => {
-    const crewItem = crewAmountData.find(item => populationType.includes(item.value))
-    const customItem = customTourPrices[0]
-
-
-    let newPrice = 0
-
-    if (selectedTheme === "Custom Tour" && subscriptionType === "per-tour") {
-      newPrice = customItem?.perTourFee(country) ?? 0
-    }
-    else if (selectedTheme === "Custom Tour" && subscriptionType === "monthly") {
-      newPrice = customItem?.monthlySub(country) ?? 0
-    }
-
-    else if (selectedTheme !== "Custom Tour" && subscriptionType === "monthly") {
-      newPrice = crewItem?.monthlySub(country) ?? 0
-    }
-    else if (selectedTheme !== "Custom Tour" && subscriptionType === "per-tour") {
-      newPrice = crewItem?.perTourFee(country) ?? 0
-    }
-
-
-    setPrice(newPrice)
-
-  }
-
-
   useEffect(() => {
-    if (subscriptionType && country) {
-      pickPrice(populationType, subscriptionType, country)
-    }
-  }, [selectedTheme, subscriptionType, populationType, country])
+    setPrice(computedPrice)
+  }, [computedPrice, setPrice])
 
 
 
@@ -104,7 +66,7 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
   const config = {
     public_key: flutterwavePublicKey || "",
     tx_ref: `tx-${Date.now()}`,
-    amount: country !== "Nigeria" && paymentCurrency === "NGN" ? nairaRate * price : country === "Nigeria" && paymentCurrency === "USD" ? (price / nairaRate) : price,
+    amount: !isNigeria && paymentCurrency === "NGN" ? nairaRate * price : isNigeria && paymentCurrency === "USD" ? (price / nairaRate) : price,
     currency: paymentCurrency,
     payment_options: "card,mobilemoney,ussd",
     customer: {
@@ -114,7 +76,7 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
     },
     customizations: {
       title: `THEME: ${selectedTheme}`,
-      description: subscriptionType === "per-tour" ? "Per Tour Subscription Booking" : "Monthly Subscription Booking",
+      description: "Exclusive E-Rhythm Tour Booking",
       logo: "https://res.cloudinary.com/dwedz2laa/image/upload/v1752824400/logo_ajy1ca.png",
     },
   }
@@ -204,47 +166,18 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
         <p className="mb-2 mx-auto font-lato">Please proceed to payment to confirm your booking.</p>
 
         <h3 className="text-sm text-[#EF8F57] font-bold font-merriweather">THEME: {selectedTheme}</h3>
-        <h3 className="text-sm mb-1 text-[#EF8F57] font-bold font-merriweather">PRICE: {price < 1 ? "-" : price} {country === "Nigeria" ? "NGN" : "USD"}</h3>
+        <h3 className="text-sm mb-1 text-[#EF8F57] font-bold font-merriweather">PRICE: {price < 1 ? "-" : price} {currency}</h3>
+        {discountApplied && (
+          <p className="text-xs text-green-600 font-lato">Discount code applied: 20% off</p>
+        )}
 
-
-        <div className="font-merriweather flex flex-col gap-1 items-start my-3 text-sm " >
-          Pick a subscription type
-          <div className="  w-full block gap-3 !text-xs mt-1 " >
-            <CustomCheckBox
-              id="perTour"
-              label="Per Tour subscription "
-              onCheckedChange={(checked) => {
-                if (checked && country) {
-                  setSubscriptionType("per-tour")
-                  pickPrice(populationType, "per-tour", country)
-                }
-              }}
-              checked={subscriptionType === "per-tour"}
-            />
-
-            <CustomCheckBox
-              id="monthly"
-              label="Monthly subscription "
-              onCheckedChange={(checked) => {
-                if (checked && country) {
-                  setSubscriptionType("monthly")
-                  pickPrice(populationType, "monthly", country)
-                }
-              }}
-              checked={subscriptionType === "monthly"}
-            />
-
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-3 w-full items-center justify-center">
+        <div className="flex flex-col md:flex-row gap-3 w-full items-center justify-center mt-3">
 
 
           {/* <CustomConnectButton /> */}
 
           <Button
             type="button"
-            disabled={!subscriptionType}
             onClick={() => toast("Crypto payment feature  coming soon!")}
             className="bg-[#EF8F57] hover:bg-[#EF8F57]/90 w-full basis-1/2 cursor-pointer font-merriweather"
             aria-label="Pay with Fiat"
@@ -259,7 +192,6 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
 
           <Button
             type="button"
-            disabled={!subscriptionType}
             onClick={() => setShowCurrencyBtns((prev) => !prev)}
             className="bg-[#EF8F57] hover:bg-[#EF8F57]/90 w-full basis-1/2 cursor-pointer font-merriweather"
             aria-label="Pay with Fiat"
