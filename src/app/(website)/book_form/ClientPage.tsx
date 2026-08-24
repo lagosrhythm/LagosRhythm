@@ -283,8 +283,8 @@ export default function Page() {
             </div>
 
             <div className="w-full h-fit flex items-center justify-center bg-[#FDF4F1] z-10 ">
-                <div className="flex items-center w-fit flex-col gap-5 lg:gap-10 pb-10 px-4 mt-[-7%]">
-                    <div className="w-full flex items-center justify-center gap-4 px-[3%]">
+                <div className="flex items-center max-w-7xl w-full mx-auto flex-col gap-3 lg:gap-6 pb-10 px-4 mt-[-7%]">
+                    <div className="w-full flex flex-wrap items-center justify-center gap-4 px-[3%]">
                         {bookFormImages.slice(0, 3).map((data, index) => (
                             <div key={index} title={data.label} className="bg-[#ffffff]   rounded-[20px] flex items-center justify-center w-[100px] h-[100px] md:h-[200px] md:w-[200px] lg:w-[294px] lg:h-[263px] overflow-hidden p-2 md:p-3">
                                 <div className="relative h-full w-full">
@@ -294,7 +294,7 @@ export default function Page() {
                         ))}
                     </div>
 
-                    <div className="w-full flex flex-col items-center gap-2 justify-center my-5 lg:my-5 text-center">
+                    <div className="w-full flex flex-col items-center gap-2 justify-center my-3 lg:my-4 text-center">
                         <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl font-merienda">BOOK YOUR PACKAGE</h1>
                         <p className="font-medium text-base md:text-lg font-lato">Experience Something New Every Moment</p>
                     </div>

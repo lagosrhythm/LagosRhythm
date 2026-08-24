@@ -258,8 +258,8 @@ export default function Page() {
           <div className="w-full h-full absolute top-0 left-0 bg-black/30" />
         </div>
         <div className="w-full h-fit flex items-center justify-center bg-[#FDF4F1] z-10">
-          <div className="flex items-center w-fit flex-col gap-5 lg:gap-10 pb-10 px-4 mt-[-7%]">
-            <div className="w-full flex items-center justify-center gap-4 px-[3%]">
+          <div className="flex items-center max-w-7xl w-full mx-auto flex-col gap-3 lg:gap-6 pb-10 px-4 mt-[-7%]">
+            <div className="w-full flex flex-wrap items-center justify-center gap-4 px-[3%]">
               {bookFormImages.slice(0, 3).map((data, index) => (
                 <div
                   key={index}
@@ -281,20 +281,20 @@ export default function Page() {
             </div>
 
 
-            <div className="w-full  flex items-center justify-between gap-10 py-10 px-4 my-32 " >
-              <div className="flex-1/2 space-y-3 " >
-                <h1 className="font-semibold text-base md:text-xl font-merienda">Lagos Rhythm Live</h1>
+            <div className="w-full  flex flex-col md:flex-row items-center md:items-start justify-between gap-6 py-6 px-4 my-8 " >
+              <div className="w-full md:flex-1 space-y-3 " >
+                <h1 className="font-bold text-2xl md:text-3xl lg:text-4xl font-merienda text-[#EF8F57] leading-tight">Lagos Rhythm Live</h1>
                 <p className="font-medium text-sm md:text-base  font-lato" >A live experience of Freedom Park</p>
               </div>
 
-              <div className="flex-1/2 flex flex-col items-end justify-end text-end gap-3 " >
+              <div className="w-full md:flex-1 flex flex-col items-center md:items-end justify-end text-center md:text-end gap-3 " >
                 <Image
-                  src={"/in-person/tour-and-safety.jpg"}
+                  src={"/storykeeper.jpeg"}
                   title={"storykeeper image"}
                   alt="image"
-                  height={300}
                   width={300}
-                  className="rounded-[10px]"
+                  height={300}
+                  className="rounded-[10px] w-full max-w-[300px] h-auto"
                   priority
                 />
 
@@ -306,7 +306,7 @@ export default function Page() {
             </div>
 
 
-            <div className="w-full flex flex-col items-center gap-2 justify-center my-5 lg:my-5 text-center">
+            <div className="w-full flex flex-col items-center gap-2 justify-center my-3 lg:my-4 text-center">
               <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl font-merienda">BOOK YOUR PACKAGE</h1>
               <p className="font-medium text-base md:text-lg font-lato">Experience Something New Every Moment</p>
             </div>

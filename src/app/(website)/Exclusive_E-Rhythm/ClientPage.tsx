@@ -72,7 +72,7 @@ export default function Page() {
             </section >
 
 
-            <div className="w-full flex flex-col gap-6 items-center py-16 px-10 bg-[#FDF4F1]">
+            <div className="w-full flex flex-col gap-6 items-center py-16 px-4 md:px-10 bg-[#FDF4F1]">
 
 
                 {/* What you get section  */}
