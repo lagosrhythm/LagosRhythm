@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
-import { db } from "@/app/config/firebaseAdmin";
+import { getDb } from "@/app/config/firebaseAdmin";
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
+  const db = getDb();
   const snap = await db.collection("exclusive_Tour_form").get();
 
   const stats: Record<string, { count: number; bookings: any[] }> = {};
