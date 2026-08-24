@@ -40,6 +40,7 @@ export default function Page() {
   const [isNigeria, setIsNigeria] = useState(false)
   const searchParams = useSearchParams()
   const referralFromUrl = searchParams?.get("ref") ?? ""
+  const referralDefault = referralFromUrl || "Direct"
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -63,7 +64,7 @@ export default function Page() {
       otherJoin: "",
       tourDate: [],
       termsAgreement: false,
-      referralSource: referralFromUrl,
+      referralSource: referralDefault,
       time: "",
       discountCode: "Ruthina",
     },
