@@ -151,7 +151,7 @@ export default function Footer() {
                 </div>
 
 
-                <div className="w-full max-w-[600px]  items-start gap-10 md:gap-20  grid grid-rows-[auto_auto] md:grid-rows-none md:grid-cols-[auto_auto]" >
+                <div className="w-full max-w-2xl  items-start gap-10 md:gap-20  grid grid-rows-[auto_auto] md:grid-rows-none md:grid-cols-[auto_auto]" >
                     <div className="w-full max-w-md flex flex-col items-start gap-3  md:gap-6" >
                         <h3 className="font-medium text-lg md:text-xl font-playfair" >Company</h3>
                         <ul className="flex flex-col items-start gap-2" >

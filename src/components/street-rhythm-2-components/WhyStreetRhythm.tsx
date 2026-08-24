@@ -7,7 +7,7 @@ export default function WhyStreetRhythm() {
     return (
         <section className="w-full h-fit px-[8%] md:px-[4%] py-16 bg-[#F9FAFB] text-[#0A0E14] " >
 
-            <div className="w-full max-w-[1380px]  mx-auto  flex flex-col items-center justify-center gap-20  ">
+            <div className="w-full max-w-7xl  mx-auto  flex flex-col items-center justify-center gap-20  ">
 
                 <div className="flex flex-col items-center justify-center gap-3 text-center" >
                     <h4 className="text-[#D4422C] font-merriweather font-bold text-[0.85em] uppercase " >Why Street Rhythm</h4>

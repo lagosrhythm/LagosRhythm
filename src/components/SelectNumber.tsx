@@ -52,7 +52,7 @@ export default function SelectNumber({ setShowSelectModal }: SelectNumberprops) 
                         e.preventDefault()
                         e.stopPropagation()
                     }}
-                    className="w-full max-w-[700px] rounded-lg  bg-[#FDF4F1] h-fit py-6 px-5 flex flex-col gap-5 items-center  " >
+                    className="w-full max-w-3xl rounded-lg  bg-[#FDF4F1] h-fit py-6 px-5 flex flex-col gap-5 items-center  " >
 
                     <button onClick={() => setShowSelectModal(false)} className="ml-auto text-red-600 font-bold cursor-pointer  p-0.5 flex items-center justify-center  " ><X size={30} /> </button>
 

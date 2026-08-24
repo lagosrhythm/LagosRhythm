@@ -57,7 +57,7 @@ const PreviewModal = ({ setShowPreviewModal, data }: PreviewModalProps) => {
                         e.preventDefault()
                         e.stopPropagation()
                     }}
-                    className="w-full max-w-[700px] rounded-lg  bg-[#FDF4F1] h-fit py-6 px-5 flex flex-col gap-5 items-center  " >
+                    className="w-full max-w-3xl rounded-lg  bg-[#FDF4F1] h-fit py-6 px-5 flex flex-col gap-5 items-center  " >
 
                     <button onClick={() => setShowPreviewModal(false)} className="ml-auto text-red-600 font-bold cursor-pointer  p-0.5 flex items-center justify-center  " ><X size={30} /> </button>
 
@@ -123,7 +123,7 @@ export default function Page() {
     return (
         <>
             {/* The hero section  */}
-            <section className="h-screen w-full flex items-center justify-center flex-col gap-4 px-[4%] py-7 bg-cover bg-center bg-no-repeat relative  " style={{ backgroundImage: "url('/in-person/in-person-2.jpg')" }} >
+            <section className="min-h-[80vh] md:min-h-screen w-full flex items-center justify-center flex-col gap-4 px-[4%] py-7 bg-cover bg-center bg-no-repeat relative  " style={{ backgroundImage: "url('/in-person/in-person-2.jpg')" }} >
                 <div className="inset-0 bg-black/55 absolute h-full w-full " />
 
                 <div className="overflow-hidden text-center z-10 space-y-1 flex flex-col items-center gap-4 py-10 ">

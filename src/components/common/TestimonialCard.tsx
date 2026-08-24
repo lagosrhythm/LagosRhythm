@@ -15,13 +15,13 @@ interface TestimonialCardProps{
 
 export default function TestimonialCard({data}: TestimonialCardProps) {
     return (
-        <div className="bg-[#FFFFFF] rounded-xl py-4 px-6 flex flex-col items-start gap-5  w-full max-w-[330px] md:max-w-[409px] shadow-lg cursor-grab " >
+        <div className="bg-[#FFFFFF] rounded-xl py-4 px-6 flex flex-col items-start gap-5  w-full max-w-lg md:max-w-xl shadow-lg cursor-grab " >
             <h5 className=" text-base font-medium text-[#EB662B] " >{data.caption}</h5>
             <p className=" text-[#05073C] font-medium text-base font-lato " >{data.content} </p>
                 <hr className="bg-[#E7E6E6] w-full border-[#E7E6E6] "  />
 
                 <div className="w-full flex items-center justify-start gap-3 mt-auto " >
-                    <Image src={data.image} alt={`${data.name}-image`} width={100} height={100} className=" w-[60px] h-[60px] rounded-full object-cover object-center  " />
+                    <Image src={data.image} alt={`${data.name}-image`} width={100} height={100} className=" max-w-full h-auto rounded-full object-cover object-center  " />
 
 
                     <div className="w-fit flex flex-col items-start justify-between gap-1" >

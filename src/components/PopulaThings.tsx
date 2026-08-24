@@ -122,7 +122,7 @@ export default function PopularThings() {
 
   return (
     <section className="w-full bg-[#FDF4F1] py-14 md:py-[5%] px-[5%] flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 ">
-      <div className="w-full max-w-[440px] flex flex-col items-start gap-3 md:gap-5">
+      <div className="w-full max-w-2xl flex flex-col items-start gap-3 md:gap-5">
         <h2 className="font-bold text-[#05073C] text-2xl md:text-3xl  font-playfair ">Interesting things to do</h2>
         <p className="text-lg font-normal text-[#05073C] font-lato ">
           Lagos is more than a city - it&apos;s a living experience.

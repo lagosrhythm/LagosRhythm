@@ -28,7 +28,7 @@ export default function Page() {
       {hasResults && (
         <>
           <RouteDetails />
-          <section className="w-full py-16 px-[5%] max-w-[1380px] mx-auto">
+          <section className="w-full py-16 px-[5%] max-w-7xl mx-auto">
             <div className="max-w-5xl mx-auto">
               <div className="mb-6">
                 <h3 className="text-2xl font-black text-[#05073C]">Community Chat</h3>
@@ -44,7 +44,7 @@ export default function Page() {
 
       {/* If searched but no results */}
       {hasSearched && !hasResults && (
-        <section id="no-route-found" className="w-full py-24 px-[5%] max-w-[1380px] mx-auto flex flex-col items-center text-center scroll-mt-24">
+        <section id="no-route-found" className="w-full py-24 px-[5%] max-w-7xl mx-auto flex flex-col items-center text-center scroll-mt-24">
             <div className="w-full max-w-3xl bg-gray-50 border border-gray-200 rounded-2xl p-6 md:p-12 shadow-sm">
             <div className="text-5xl mb-4">🚫</div>
             <h3 className="text-2xl font-bold mb-3">No Route Found</h3>

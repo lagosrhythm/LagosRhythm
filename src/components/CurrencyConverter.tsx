@@ -73,7 +73,7 @@ export default function CurrencyConverter({ setHidePrices }: CurrencyConverterPr
 
     else
         return (
-            <div className="mx-auto w-[300px] h-fit py-6 px-5 rounded-xl flex flex-col items-center gap-5 bg-[#ffffff] text-black shadow-2xl " >
+            <div className="mx-auto max-w-md h-fit py-6 px-5 rounded-xl flex flex-col items-center gap-5 bg-[#ffffff] text-black shadow-2xl " >
 
                 <button onClick={() => setshowConversionModal(false)} className="text-red-600 ml-auto cursor-pointer " ><X size={20} /></button>
 

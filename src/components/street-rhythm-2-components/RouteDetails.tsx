@@ -56,7 +56,7 @@ export default function RouteDetails() {
     const [activeTab, setActiveTab] = useState<string>("overview")
 
     return (
-        <section id="route" className="w-full py-24 px-[5%] max-w-[1380px] mx-auto flex flex-col items-center gap-16 text-black">
+        <section id="route" className="w-full py-24 px-[5%] max-w-7xl mx-auto flex flex-col items-center gap-16 text-black">
             <div className="flex flex-col items-center gap-3 text-center">
                 <h4 className="text-[#D4422C] font-bold text-sm uppercase tracking-wider">
                     Route Details

@@ -16,7 +16,7 @@ export default function HowItWorks() {
   bg-repeat"
             />
 
-            <div className=" w-full max-w-[1380px]  mx-auto  flex flex-col items-center justify-center gap-10   "  >
+            <div className=" w-full max-w-7xl  mx-auto  flex flex-col items-center justify-center gap-10   "  >
 
                 <div className="flex flex-col items-center justify-center gap-3 text-center" >
                     <h4 className="text-[#F7B32B] font-merriweather font-bold text-[0.85em] uppercase " >The process</h4>
