@@ -1,5 +1,6 @@
 "use client"
 
+import { useSearchParams } from "next/navigation"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { Minus, PlusIcon } from "lucide-react"
 import Image from "next/image"
@@ -37,6 +38,8 @@ export default function Page() {
   const [showCryptoPaymentModal, setShowCryptoPaymentModal] = useState(false)
   const [pendingFormData, setPendingFormData] = useState<exclusiveBookingDataType | null>(null)
   const [isNigeria, setIsNigeria] = useState(false)
+  const searchParams = useSearchParams()
+  const referralFromUrl = searchParams?.get("ref") ?? ""
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -60,7 +63,7 @@ export default function Page() {
       otherJoin: "",
       tourDate: [],
       termsAgreement: false,
-      referralSource: "",
+      referralSource: referralFromUrl,
       time: "",
       discountCode: "",
     },
