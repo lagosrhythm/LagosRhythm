@@ -547,11 +547,12 @@ export default function Page() {
 
               <div className="w-full flex flex-col gap-2">
                 <Input
-                  label="Enter discount code (optional)"
+                  label="Discount code"
                   {...register("discountCode")}
                   name="discountCode"
                   type="text"
                   placeholder="Discount code"
+                  disabled
                 />
                 {formData.discountCode && (
                   discountApplied ? (
