@@ -552,7 +552,8 @@ export default function Page() {
                   name="discountCode"
                   type="text"
                   placeholder="Discount code"
-                  disabled
+                  readOnly
+                  className="bg-gray-100 text-gray-600 cursor-not-allowed"
                 />
                 {formData.discountCode && (
                   discountApplied ? (
