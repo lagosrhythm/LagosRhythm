@@ -326,8 +326,8 @@ export default function Page() {
                     <Input
                       {...register(`tourists.${index}.fullName`, { required: "Full name is required" })}
                       type="text"
-                      placeholder={`User ${index + 1}`}
-                      label={`User ${index + 1} Full Name`}
+                      placeholder={`Guest ${index + 1}`}
+                      label={`Guest ${index + 1} Full Name`}
                       error={errors.tourists?.[index]?.fullName?.message}
                       isRequired={index === 0 ? true : false}
                     />
@@ -340,8 +340,8 @@ export default function Page() {
                         },
                       })}
                       type="email"
-                      placeholder={`User ${index + 1} Email`}
-                      label={`User ${index + 1} Email`}
+                      placeholder={`Guest ${index + 1} Email`}
+                      label={`Guest ${index + 1} Email`}
                       error={errors.tourists?.[index]?.email?.message}
                       isRequired={index === 0 ? true : false}
                     />
