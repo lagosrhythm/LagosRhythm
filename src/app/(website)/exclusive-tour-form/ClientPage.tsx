@@ -40,6 +40,7 @@ export default function Page() {
   const [isNigeria, setIsNigeria] = useState(false)
   const searchParams = useSearchParams()
   const referralFromUrl = searchParams?.get("ref") ?? ""
+  const discountFromUrl = searchParams?.get("discount") ?? ""
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -65,7 +66,7 @@ export default function Page() {
       termsAgreement: false,
       referralSource: referralFromUrl,
       time: "",
-      discountCode: "",
+      discountCode: discountFromUrl,
     },
   })
 
