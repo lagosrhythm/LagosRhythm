@@ -41,6 +41,7 @@ export default function Page() {
   const searchParams = useSearchParams()
   const referralFromUrl = searchParams?.get("ref") ?? ""
   const referralDefault = referralFromUrl || "Direct"
+  const discountDefault = referralFromUrl === "Ruthina" ? "Ruthina" : ""
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -66,7 +67,7 @@ export default function Page() {
       termsAgreement: false,
       referralSource: referralDefault,
       time: "",
-      discountCode: "Ruthina",
+      discountCode: discountDefault,
     },
   })
 
@@ -553,8 +554,8 @@ export default function Page() {
                   name="discountCode"
                   type="text"
                   placeholder="Discount code"
-                  readOnly
-                  className="bg-gray-100 text-gray-600 cursor-not-allowed"
+                  readOnly={discountDefault === "Ruthina"}
+                  className={discountDefault === "Ruthina" ? "bg-gray-100 text-gray-600 cursor-not-allowed" : ""}
                 />
                 {formData.discountCode && (
                   discountApplied ? (
