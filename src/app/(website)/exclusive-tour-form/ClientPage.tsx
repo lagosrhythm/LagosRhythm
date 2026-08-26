@@ -41,7 +41,7 @@ export default function Page() {
   const searchParams = useSearchParams()
   const referralFromUrl = searchParams?.get("ref") ?? ""
   const referralDefault = referralFromUrl || "Direct"
-  const discountDefault = referralFromUrl === "Ruthina" ? "Ruthina" : ""
+  const discountDefault = referralFromUrl === "Ruthina" ? "Ruthina" : "NONE"
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -547,24 +547,22 @@ export default function Page() {
                 )}
               />
 
-              <div className="w-full flex flex-col gap-2">
-                <Input
-                  label="Discount code"
-                  {...register("discountCode")}
-                  name="discountCode"
-                  type="text"
-                  placeholder="Discount code"
-                  readOnly={discountDefault === "Ruthina"}
-                  className={discountDefault === "Ruthina" ? "bg-gray-100 text-gray-600 cursor-not-allowed" : ""}
-                />
-                {formData.discountCode && (
-                  discountApplied ? (
+              {referralFromUrl === "Ruthina" && (
+                <div className="w-full flex flex-col gap-2">
+                  <Input
+                    label="Discount code"
+                    {...register("discountCode")}
+                    name="discountCode"
+                    type="text"
+                    placeholder="Discount code"
+                    readOnly
+                    className="bg-gray-100 text-gray-600 cursor-not-allowed"
+                  />
+                  {formData.discountCode && discountApplied && (
                     <p className="text-green-600 text-xs md:text-sm">Discount code applied: 20% off</p>
-                  ) : (
-                    <p className="text-red-500 text-xs md:text-sm">Invalid discount code</p>
-                  )
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
               <div className="w-full flex items-center justify-between gap-4 py-3 px-4 rounded-[10px] bg-white">
                 <p className="font-medium text-sm md:text-base font-lato">Price ({isNigeria ? "Nigeria" : "International"})</p>
