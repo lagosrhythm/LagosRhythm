@@ -41,7 +41,7 @@ export default function Page() {
   const searchParams = useSearchParams()
   const referralFromUrl = searchParams?.get("ref") ?? ""
   const referralDefault = referralFromUrl || "Direct"
-  const discountDefault = referralFromUrl === "Ruthina" ? "Ruthina" : "NONE"
+  const discountDefault = referralFromUrl === "Ruthina" ? "Ruthina" : ""
   // const [timeOptions, setTimeOptions] = useState<customSelectTypes[] | null>(null)
   const formatted = useMemo(() => {
     return selectedDates.map((d) => d.toISOString());
@@ -127,7 +127,12 @@ export default function Page() {
 
   // This function checks if the selectedTheme is not custom themesData, then display modal for PaymentModal, else just submit
   const handleFormSubmit = (data: exclusiveBookingDataType) => {
-    setPendingFormData(data)
+    // Ensure discountCode is never empty for Firestore validation
+    const correctedData = {
+      ...data,
+      discountCode: data.discountCode && data.discountCode.trim() !== "" ? data.discountCode.trim() : "NONE",
+    };
+    setPendingFormData(correctedData)
 
     setShowPaymentModal(true)
   }
@@ -547,22 +552,20 @@ export default function Page() {
                 )}
               />
 
-              {referralFromUrl === "Ruthina" && (
-                <div className="w-full flex flex-col gap-2">
-                  <Input
-                    label="Discount code"
-                    {...register("discountCode")}
-                    name="discountCode"
-                    type="text"
-                    placeholder="Discount code"
-                    readOnly
-                    className="bg-gray-100 text-gray-600 cursor-not-allowed"
-                  />
-                  {formData.discountCode && discountApplied && (
-                    <p className="text-green-600 text-xs md:text-sm">Discount code applied: 20% off</p>
-                  )}
-                </div>
-              )}
+              <div className="w-full flex flex-col gap-2">
+                <Input
+                  label="Discount code"
+                  {...register("discountCode")}
+                  name="discountCode"
+                  type="text"
+                  placeholder="Discount code"
+                  readOnly={referralFromUrl === "Ruthina"}
+                  className={referralFromUrl === "Ruthina" ? "bg-gray-100 text-gray-600 cursor-not-allowed" : ""}
+                />
+                {formData.discountCode && discountApplied && (
+                  <p className="text-green-600 text-xs md:text-sm">Discount code applied: 20% off</p>
+                )}
+              </div>
 
               <div className="w-full flex items-center justify-between gap-4 py-3 px-4 rounded-[10px] bg-white">
                 <p className="font-medium text-sm md:text-base font-lato">Price ({isNigeria ? "Nigeria" : "International"})</p>
