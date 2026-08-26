@@ -30,8 +30,8 @@ export default function Page() {
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const maxParticipantCount = populationAmount
   const [loading, setLoading] = useState(false)
-  const minDate = new Date("2025-09-05");
-  const maxDate = new Date("2025-09-05");
+  const minDate = new Date("2026-09-05");
+  const maxDate = new Date("2026-09-05");
   // maxDate.setDate(maxDate.getDate() + 30)
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -116,13 +116,11 @@ export default function Page() {
   }
 
 
-
   const decreaseParticipantsCount = () => {
     if (selectedTheme === "Custom Tour") return;
     if (participantsCount < 2) return
     setParticipantsCount((prev) => prev - 1)
   }
-
 
 
   // This function checks if the selectedTheme is not custom themesData, then display modal for PaymentModal, else just submit
@@ -144,37 +142,38 @@ export default function Page() {
 
     setLoading(true)
 
-
+    // close payment modal immediately so UI doesn't stack
+    setShowPaymentModal(false)
 
     try {
+      // use the snapshot stored in pendingFormData (already has safe discountCode)
       await addDoc(collection(fireDB, "exclusive_Tour_form"), {
-        tourist: formData.tourists,
-        country: formData.country,
-        reasonForJoin: formData.reasonForJoin,
-        OtherReason: formData.OtherReason,
-        joiningAs: formData.joiningAs,
-        otherJoin: formData.otherJoin,
-        tourDate: formData.tourDate,
-        termsAgreement: formData.termsAgreement,
-        referralSource: formData.referralSource,
+        tourist: pendingFormData.tourists,
+        country: pendingFormData.country,
+        reasonForJoin: pendingFormData.reasonForJoin,
+        OtherReason: pendingFormData.OtherReason,
+        joiningAs: pendingFormData.joiningAs,
+        otherJoin: pendingFormData.otherJoin,
+        tourDate: pendingFormData.tourDate,
+        termsAgreement: pendingFormData.termsAgreement,
+        referralSource: pendingFormData.referralSource,
         subscribedAt: new Date(),
-        time: formData.time,
-        discountCode: formData.discountCode,
+        time: pendingFormData.time,
+        discountCode: pendingFormData.discountCode,
         // tour details info here
-        paidPrice: paidPrice,
+        paidPrice,
         populationSize: participantsCount.toString(),
         tourTheme: selectedTheme,
         tourCompleted: false,
       })
 
-
       // confirmation email function
       try {
         await sendConfirmationEmail({
-          name: formData.tourists[0]?.fullName,
-          email: formData.tourists[0]?.email,
+          name: pendingFormData.tourists[0]?.fullName,
+          email: pendingFormData.tourists[0]?.email,
           service: "Exclusive E-Rhythm",
-          date: "11th October 2025",
+          date: "5th September 2026",
           tour_link: "https://lagosrhythm.com/"
         })
       }
@@ -182,9 +181,12 @@ export default function Page() {
         console.error("Failed to send confirmation email", err)
       }
 
+      // clear form only on success
       reset()
       setSelectedDates([])
       clearAllDates()
+
+      // show confirmation modal after payment modal closed
       setShowConfirmationModal(true)
     }
 
@@ -197,11 +199,6 @@ export default function Page() {
     }
 
   }
-
-
-
-
-
 
 
   const handleDateChange = (date: Date | null) => {
@@ -289,6 +286,7 @@ export default function Page() {
                 </div>
               ))}
             </div>
+
 
 
             <div className="w-full  flex flex-col md:flex-row items-center md:items-start justify-between gap-6 py-6 px-4 my-8 " >
@@ -381,6 +379,8 @@ export default function Page() {
 
 
 
+
+
               <Controller
                 control={control}
                 name="reasonForJoin"
@@ -427,7 +427,6 @@ export default function Page() {
                   </div>
                 )}
               />
-
               {formData.reasonForJoin.includes("others") && (
                 <Input
                   {...register("OtherReason", { required: "Please specify your reason" })}
@@ -464,6 +463,9 @@ export default function Page() {
                   error={errors.otherJoin?.message}
                 />
               )}
+
+
+
 
 
               <div className="w-full">
@@ -516,6 +518,9 @@ export default function Page() {
               </div>
 
 
+
+
+
               <Controller
                 control={control}
                 name="time"
@@ -532,6 +537,8 @@ export default function Page() {
                   />
                 )}
               />
+
+
 
 
 
@@ -636,4 +643,3 @@ export default function Page() {
       </div>
   )
 }
-
