@@ -178,6 +178,7 @@ export default function Page() {
           date: "05-09-2026",
           tour_link: "https://lagosrhythm.com/"
         })
+        toast.success("Confirmation email sent")
       }
       catch (err) {
         console.error("Failed to send confirmation email", err)
