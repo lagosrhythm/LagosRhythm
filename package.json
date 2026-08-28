@@ -95,5 +95,18 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
-  }
+  },
+  "description": "Lagos Rhythm is a Next.js web application focused on tours, cultural experiences, and marketplace features for Lagos, Nigeria.",
+  "main": "patch-swr.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lagosrhythm/LagosRhythm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lagosrhythm/LagosRhythm/issues"
+  },
+  "homepage": "https://github.com/lagosrhythm/LagosRhythm#readme"
 }

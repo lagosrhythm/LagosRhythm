@@ -14,7 +14,7 @@ interface ConfirmationModalProps {
     body?: string
 }
 
-export default function ConfirmationModal({ showConfirmationModal, setShowConfirmationModal}: ConfirmationModalProps) {
+export default function ConfirmationModal({ showConfirmationModal, setShowConfirmationModal, title, body }: ConfirmationModalProps) {
     const [showConfetti, setShowConfetti] = useState(true);
     const [width, height] = useWindowSize();
 
