@@ -10,6 +10,8 @@ interface ConfirmationModalProps {
     showConfirmationModal: boolean;
     setShowConfirmationModal: (showConfirmationModal: boolean) => void
     tourType: string
+    title?: string
+    body?: string
 }
 
 export default function ConfirmationModal({ showConfirmationModal, setShowConfirmationModal}: ConfirmationModalProps) {
@@ -51,8 +53,8 @@ export default function ConfirmationModal({ showConfirmationModal, setShowConfir
             <div className="w-full h-full relative overflow-hidden " >
                 <div className={`w-full max-w-sm bg-white px-5 py-6 rounded-lg flex flex-col items-center justify-center gap-3 text-center absolute top-[50%] left-[50%] translate-x-[-50%] transition-transform duration-200 ease-in-out ${showConfirmationModal ? "translate-y-[-50%]" : "translate-y-[500%]"}  `} >
                     <button onClick={() => setShowConfirmationModal(false)} className="ml-auto cursor-pointer bg-[#EF8F57] text-white rounded-sm p-[2px] mb-3 hover:scale-105 transform duration-150 ease-in-out transition-transform " ><X size={23} /></button>
-                    <h1 className="text-[#05073C] text-xl font-medium ">Your tour is booked successfully.</h1>
-                    <p className="text-[#05073C] text-base font-normal  " >You will receive the joining details shortly before the tour begins. We look forward to taking you through Lagos.</p>
+                    <h1 className="text-[#05073C] text-xl font-medium ">{title ?? "Your tour is booked successfully."}</h1>
+                    <p className="text-[#05073C] text-base font-normal  ">{body ?? "You will receive the joining details shortly before the tour begins. We look forward to taking you through Lagos."}</p>
 
 
                     <div className=" mt-3 flex flex-col gap-2  " >

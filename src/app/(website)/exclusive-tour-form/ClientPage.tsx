@@ -28,6 +28,8 @@ import CryptoPaymentModal from "@/components/payments/CryptoPaymentModal"
 export default function Page() {
   const { participantsCount, setParticipantsCount, populationAmount, selectedTheme } = useAppContext()
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+  const [confirmTitle, setConfirmTitle] = useState<string>("Your tour is booked successfully.");
+  const [confirmBody, setConfirmBody] = useState<string>("You will receive the joining details shortly before the tour begins. We look forward to taking you through Lagos.");
   const maxParticipantCount = populationAmount
   const [loading, setLoading] = useState(false)
   const minDate = new Date("2026-09-05");
@@ -173,7 +175,7 @@ export default function Page() {
           name: pendingFormData.tourists[0]?.fullName,
           email: pendingFormData.tourists[0]?.email,
           service: "Exclusive E-Rhythm",
-          date: "5th September 2026",
+          date: "05-09-2026",
           tour_link: "https://lagosrhythm.com/"
         })
       }
@@ -185,6 +187,10 @@ export default function Page() {
       reset()
       setSelectedDates([])
       clearAllDates()
+
+      // set custom confirmation message
+      setConfirmTitle("You've successfully booked Lagos Rhythm Live")
+      setConfirmBody("We'll provide more information via email")
 
       // show confirmation modal after payment modal closed
       setShowConfirmationModal(true)
@@ -624,6 +630,8 @@ export default function Page() {
             showConfirmationModal={showConfirmationModal}
             setShowConfirmationModal={setShowConfirmationModal}
             tourType="Exclusive E-Rhythm!"
+            title={confirmTitle}
+            body={confirmBody}
           />
         )}
 
