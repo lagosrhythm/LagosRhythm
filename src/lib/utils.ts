@@ -22,17 +22,38 @@ export const sendConfirmationEmail = (data: {
   date: string;
   tour_link: string
 }) => {
+  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+  const templateId = process.env.NEXT_PUBLIC_EMAILJS_BOOKING_CONFIRMATION_TEMPLATE_ID
+  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+  // Validate required environment variables
+  if (!serviceId || !templateId || !publicKey) {
+    console.error("EmailJS configuration missing:", {
+      serviceId: !!serviceId,
+      templateId: !!templateId,
+      publicKey: !!publicKey,
+    })
+    return Promise.reject(new Error("EmailJS not configured. Check .env.local for NEXT_PUBLIC_EMAILJS_* variables"))
+  }
+
+  console.log("Sending email via EmailJS:", { to: data.email, service: data.service })
+  
   return emailjs.send(
-    process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-    process.env.NEXT_PUBLIC_EMAILJS_BOOKING_CONFIRMATION_TEMPLATE_ID!,
+    serviceId,
+    templateId,
     {
-      name: data.name,
-      email: data.email,
-      service: data.service,
-      date: data.date,
+      from_name: "Lagos Rhythm",
+      from_email: "admin@lagosrhythm.com",
+      to_email: data.email,
+      to_name: data.name,
+      service_name: data.service,
+      booking_date: data.date,
       tour_link: data.tour_link,
+      // Also include message for template flexibility
+      message: `You've successfully booked ${data.service} for ${data.date}. We'll provide you with the access link as the day of the event approaches.`,
+      reply_to: data.email,
     },
-    process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+    publicKey
   );
 };
 

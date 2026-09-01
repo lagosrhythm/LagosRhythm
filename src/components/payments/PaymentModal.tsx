@@ -100,14 +100,28 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
     if (isProcessing && paymentCurrency) {
       handleFlutterPayment({
         callback: (response) => {
+          console.log("Flutterwave response:", response)
           setIsProcessing(false)
+          
           if (response.status === "completed") {
-            onPaymentSuccess(`${response.currency} ${response.amount}`)
+            console.log("Payment completed successfully")
+            const paidAmount = `${response.currency} ${response.amount}`
+            toast.success("Payment successful!")
+            onPaymentSuccess(paidAmount)
+            closePaymentModal()
             onClose()
+          } else if (response.status === "cancelled") {
+            console.log("Payment cancelled by user")
+            toast.error("Payment cancelled")
+            closePaymentModal()
+          } else {
+            console.log("Payment failed or pending:", response.status)
+            toast.error(`Payment ${response.status || 'failed'}. Please try again.`)
+            closePaymentModal()
           }
-          closePaymentModal()
         },
         onClose: () => {
+          console.log("Flutterwave modal closed")
           setIsProcessing(false)
         }
       })

@@ -139,8 +139,13 @@ export default function Page() {
 
   // onSubmit signature to only accept data
   const completeBooking = async (paidPrice: string) => {
+    console.log("completeBooking called with paidPrice:", paidPrice)
 
-    if (!pendingFormData) return
+    if (!pendingFormData) {
+      console.error("No pending form data found")
+      toast.error("Booking data error. Please try again.")
+      return
+    }
 
     setLoading(true)
 
@@ -148,8 +153,9 @@ export default function Page() {
     setShowPaymentModal(false)
 
     try {
+      console.log("Saving booking to Firestore...")
       // use the snapshot stored in pendingFormData (already has safe discountCode)
-      await addDoc(collection(fireDB, "exclusive_Tour_form"), {
+      const docRef = await addDoc(collection(fireDB, "exclusive_Tour_form"), {
         tourist: pendingFormData.tourists,
         country: pendingFormData.country,
         reasonForJoin: pendingFormData.reasonForJoin,
@@ -168,38 +174,53 @@ export default function Page() {
         tourTheme: selectedTheme,
         tourCompleted: false,
       })
+      console.log("Booking saved to Firestore with ID:", docRef.id)
 
       // confirmation email function
-      try {
-        await sendConfirmationEmail({
-          name: pendingFormData.tourists[0]?.fullName,
-          email: pendingFormData.tourists[0]?.email,
-          service: "Exclusive E-Rhythm",
-          date: "05-09-2026",
-          tour_link: "https://lagosrhythm.com/"
-        })
-        toast.success("Confirmation email sent")
-      }
-      catch (err) {
-        console.error("Failed to send confirmation email", err)
+      const primaryTourist = pendingFormData.tourists[0]
+      if (primaryTourist?.email) {
+        try {
+          console.log("Sending confirmation email to:", primaryTourist.email)
+          await sendConfirmationEmail({
+            name: primaryTourist.fullName || "Guest",
+            email: primaryTourist.email,
+            service: "Exclusive E-Rhythm",
+            date: "05-09-2026",
+            tour_link: "https://lagosrhythm.com/"
+          })
+          console.log("Confirmation email sent successfully")
+          toast.success("Booking confirmed! Email sent to " + primaryTourist.email)
+        }
+        catch (err) {
+          console.error("Failed to send confirmation email:", err)
+          // Don't fail the booking if email fails - still show confirmation
+          toast.warning("Booking saved but email could not be sent. Check your inbox later.")
+        }
+      } else {
+        console.error("No email found for primary tourist")
+        toast.warning("Booking saved but no email address found")
       }
 
       // clear form only on success
       reset()
       setSelectedDates([])
       clearAllDates()
+      setPendingFormData(null)
 
       // set custom confirmation message
       setConfirmTitle("You've successfully booked Lagos Rhythm Live")
       setConfirmBody("We'll provide more information via email")
 
-      // show confirmation modal after payment modal closed
-      setShowConfirmationModal(true)
+      // IMPORTANT: show confirmation modal after payment modal closed
+      setTimeout(() => {
+        console.log("Showing confirmation modal...")
+        setShowConfirmationModal(true)
+      }, 500)
     }
 
     catch (error) {
-      toast.error("Failed to book tour")
-      console.error("Failed to book", error)
+      console.error("Failed to complete booking:", error)
+      toast.error("Failed to book tour. Please try again or contact support.")
     }
     finally {
       setLoading(false)
