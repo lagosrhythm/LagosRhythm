@@ -8,6 +8,7 @@ import {
 } from '@clerk/nextjs'
 import Providers from "./providers/Providers";
 import { metadataKeywords } from "@/data/metadata";
+import JsonLd from "@/components/seo/JsonLd";
 
 
 
@@ -64,8 +65,8 @@ const signika = Signika({
 })
 
 export const metadata: Metadata = {
-  title: "Lagos Rhythm",
-  description: "Tourism Technology",
+  title: "Lagos Rhythm | Live the Vibe, Please the Mind – Virtual & In-Person Lagos Tours",
+  description: "Discover Lagos through immersive virtual tours, in-person travel experiences and authentic cultural storytelling. Book free and exclusive Lagos tours with Lagos Rhythm.",
   keywords: metadataKeywords,
   applicationName: "Lagos Rhythm",
   authors: [{ name: "Lagos Rhythm Team", url: "https://www.lagosrhythm.com" }],
@@ -80,14 +81,14 @@ export const metadata: Metadata = {
     apple: "./favicon.ico",
   },
   openGraph: {
-    title: "Lagos Rhythm",
+    title: "Lagos Rhythm | Live the Vibe, Please the Mind",
     description:
-      "Tourism Technology",
+      "Discover Lagos, Nigeria through immersive virtual tours, in-person travel experiences, street transit guides, and cultural storytelling.",
     url: "https://www.lagosrhythm.com",
     siteName: "Lagos Rhythm",
     images: [
       {
-        url: "./favicon.ico",
+        url: "https://www.lagosrhythm.com/hero-image.png",
         width: 1200,
         height: 630,
         alt: "Lagos Rhythm",
@@ -98,12 +99,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lagos Rhythm",
+    title: "Lagos Rhythm | Live the Vibe, Please the Mind",
     description:
-      "Tourism Technology",
+      "Discover Lagos through immersive virtual and in-person tours with Lagos Rhythm.",
     site: "@LagosRhythm",
     creator: "@LagosRhythm",
-    images: ["./favicon.ico"],
+    images: ["https://www.lagosrhythm.com/hero-image.png"],
   },
   metadataBase: new URL("https://www.lagosrhythm.com"),
 };
@@ -120,8 +121,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Lagos Rhythm",
+    "url": "https://www.lagosrhythm.com",
+    "logo": "https://www.lagosrhythm.com/hero-image.png",
+    "sameAs": [
+      "https://www.facebook.com/profile.php?id=61576980652512",
+      "https://www.instagram.com/lagos_rhythm/",
+      "https://www.linkedin.com/company/lagos-rhythm/",
+      "https://youtube.com/@lagosrhythm"
+    ],
+    "description": "Tourism-tech platform offering virtual and in-person tours, cultural experiences and storytelling in Lagos, Nigeria.",
+    "slogan": "Live the vibe, please the mind."
+  }
+
   return (
     <html lang="en">
+      <head>
+        <JsonLd data={orgSchema} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${playfair.variable} ${lato.variable} ${merriWeather.variable} ${merienda.variable} ${signika.variable} antialiased`}
       >

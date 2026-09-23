@@ -12,24 +12,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: now, changeFrequency: 'yearly', priority: 1 },
-    { url: `${baseUrl}/street-rhythm`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/about`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/VirtualTour`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/InPersonTour`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/Free_E-Rhythm`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/Exclusive_E-Rhythm`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
+    { url: baseUrl, lastModified: now, changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/street-rhythm`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/VirtualTour`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/InPersonTour`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/Free_E-Rhythm`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/Exclusive_E-Rhythm`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/blogs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/gallery`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/FAQ`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/feedback`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/store`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/Flights`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/profile`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/auth`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/Privacy_Policy`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/terms_and_conditions`, lastModified: now, changeFrequency: 'yearly', priority: 0.8 },
-    { url: `${baseUrl}/Live-stream`, lastModified: now, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/gallery`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/FAQ`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/store`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/Flights`, lastModified: now, changeFrequency: 'weekly', priority: 0.6 },
+    { url: `${baseUrl}/Privacy_Policy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/terms_and_conditions`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/Live-stream`, lastModified: now, changeFrequency: 'daily', priority: 0.7 },
   ]
 
   let blogPages: MetadataRoute.Sitemap = []
