@@ -5,12 +5,17 @@ import JsonLd from "@/components/seo/JsonLd"
 import { faq } from "@/data/data"
 
 export const metadata: Metadata = {
-  title: "FAQ | Lagos Rhythm",
+  title: "Lagos Rhythm FAQ | Virtual & In-Person Tour Booking Help",
   description:
-    "Frequently asked questions about Lagos Rhythm tours, bookings, virtual experiences, in-person tours, payments, and more. Get answers to common questions about exploring Lagos.",
+    "Answers to common questions about Lagos Rhythm virtual and in-person tours, bookings, payments, and how our Lagos cultural experiences work.",
   alternates: {
     canonical: "https://www.lagosrhythm.com/FAQ",
   },
+  openGraph: {
+    title: "Lagos Rhythm FAQ | Virtual & In-Person Tour Booking Help",
+    description: "Get answers about booking Lagos tours, virtual experiences, payments and more.",
+    siteName: "Lagos Rhythm",
+  }
 }
 
 const faqJsonLd = {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import ClientPage from "./ClientPage"
+import JsonLd from "@/components/seo/JsonLd"
 
 export const metadata: Metadata = {
   title: "Virtual Tours of Lagos | Live & Interactive Online Experiences",
@@ -16,6 +17,29 @@ export const metadata: Metadata = {
   },
 }
 
+const tourSchema = {
+  "@context": "https://schema.org",
+  "@type": "TouristTrip",
+  "name": "Virtual Tours of Lagos",
+  "description": "Live interactive virtual tours of Lagos, Nigeria covering culture, streets, food, art and nightlife.",
+  "touristType": "Virtual",
+  "offers": {
+    "@type": "Offer",
+    "url": "https://www.lagosrhythm.com/VirtualTour",
+    "availability": "https://schema.org/InStock"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Lagos Rhythm",
+    "url": "https://www.lagosrhythm.com"
+  }
+}
+
 export default function Page() {
-  return <ClientPage />
+  return (
+    <>
+      <JsonLd data={tourSchema} />
+      <ClientPage />
+    </>
+  )
 }
