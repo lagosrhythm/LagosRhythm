@@ -23,6 +23,10 @@ export default function AwardPopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim()) {
+      toast.error("Please enter your name");
+      return;
+    }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast.error("Please enter a valid email");
       return;
@@ -82,12 +86,13 @@ export default function AwardPopup() {
                  </div>
                ) : (
                  <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-left">
-                   <Input
-                     type="text"
-                     placeholder="Your name (optional)"
-                     value={name}
-                     onChange={(e) => setName(e.target.value)}
-                   />
+<Input
+                    type="text"
+                    placeholder="Your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
                    <Input
                      type="email"
                      placeholder="Enter your email"
