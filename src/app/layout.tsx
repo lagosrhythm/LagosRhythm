@@ -9,6 +9,7 @@ import {
 import Providers from "./providers/Providers";
 import { metadataKeywords } from "@/data/metadata";
 import JsonLd from "@/components/seo/JsonLd";
+import AwardPopup from "@/components/AwardPopup";
 
 
 
@@ -150,6 +151,7 @@ export default function RootLayout({
             <LagosRhythmProvider>
               {children}
               <Toaster position="bottom-right" />
+              <AwardPopup />
             </LagosRhythmProvider>
           </ClerkProvider>
         </Providers>
