@@ -58,53 +58,53 @@ export default function AwardPopup() {
             initial={{ scale: 0.95, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 20, opacity: 0 }}
-            className="relative w-full max-w-md rounded-2xl bg-white dark:bg-neutral-900 p-6 shadow-2xl"
+            className="relative w-full max-w-md rounded-2xl bg-card p-6 shadow-2xl border border-border"
           >
             <button
               onClick={handleClose}
-              className="absolute right-3 top-3 rounded-full p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="absolute right-3 top-3 rounded-full p-1 hover:bg-orange-100 dark:hover:bg-orange-900/30 text-muted-foreground transition-colors hover:text-orange-600"
               aria-label="Close"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div className="text-center">
-              <h2 className="text-2xl font-serif font-bold">Welcome To Lagos Rhythm</h2>
-              <p className="mt-2 text-sm font-semibold text-amber-600">2x Award Winner</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300">African Excellence Awards 2026</p>
-              <p className="mt-4 text-lg font-medium">The Experience is what matters</p>
+              <h2 className="text-2xl font-bold font-sans text-black dark:text-white">Welcome To Lagos Rhythm</h2>
+              <p className="mt-2 text-sm font-semibold text-orange-600">2x Award Winner</p>
+              <p className="text-sm text-muted-foreground">African Excellence Awards 2026</p>
+              <p className="mt-4 text-lg font-medium text-foreground">The Experience is what matters</p>
 
-               {!showForm ? (
-                <div className="mt-6">
-                  <Button onClick={() => setShowForm(true)} className="w-full">
-                    Join Our community
-                  </Button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-left">
-                  <Input
-                    type="text"
-                    placeholder="Your name (optional)"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                  <div className="flex gap-2">
-                    <Button type="submit" disabled={loading} className="flex-1">
-                      {loading ? "Subscribing..." : "Subscribe"}
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
-                      Back
-                    </Button>
-                  </div>
-                </form>
-              )}
+{!showForm ? (
+                 <div className="mt-6">
+                   <Button onClick={() => setShowForm(true)} className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                     Join Our community
+                   </Button>
+                 </div>
+               ) : (
+                 <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-left">
+                   <Input
+                     type="text"
+                     placeholder="Your name (optional)"
+                     value={name}
+                     onChange={(e) => setName(e.target.value)}
+                   />
+                   <Input
+                     type="email"
+                     placeholder="Enter your email"
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
+                     required
+                   />
+                   <div className="flex gap-2">
+                     <Button type="submit" disabled={loading} className="flex-1 bg-orange-600 hover:bg-orange-700 text-white">
+                       {loading ? "Subscribing..." : "Subscribe"}
+                     </Button>
+                     <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+                       Back
+                     </Button>
+                   </div>
+                 </form>
+               )}
             </div>
           </motion.div>
         </motion.div>
