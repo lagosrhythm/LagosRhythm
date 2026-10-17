@@ -13,10 +13,8 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { fireDB } from "../../config/firebaseClient";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import toast from "react-hot-toast";
-import { sendConfirmationEmail } from "@/lib/utils";
+import { formatTourDates, sendConfirmationEmail } from "@/lib/utils";
 
 
 export default function Page() {
@@ -169,36 +167,30 @@ export default function Page() {
 
         try {
 
-            const usersRef = collection(fireDB, "booked_Free_Rhythm");
-            const q = query(usersRef, where("email", "==", userData.email));
-            const existingDocs = await getDocs(q);
+            // the server checks for an existing booking and stores the new one
+            const bookingRes = await fetch("/api/free-booking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userData),
+            });
 
-            if (!existingDocs.empty) {
+            if (bookingRes.status === 409) {
                 toast.error("You have already booked a Free E-Rhythm tour.");
                 setLoading(false);
                 return;
             }
 
-
-            await addDoc(collection(fireDB, "booked_Free_Rhythm"), {
-                fullName: userData.fullName,
-                email: userData.email,
-                country: userData.country,
-                reasonForJoin: userData.reasonForJoin,
-                joiningAs: userData.joiningAs,
-                otherJoin: userData.otherJoin,
-                tour_date: userData.tourDate,
-                agree_to_TC: userData.termsAgreement,
-                referral: userData.referralSource,
-                subscribedAt: new Date(),
-            });
+            if (!bookingRes.ok) {
+                const { error } = await bookingRes.json().catch(() => ({ error: "" }));
+                throw new Error(error || "Booking failed");
+            }
 
             try {
                 await sendConfirmationEmail({
                     name: userData.fullName,
                     email: userData.email,
                     service: "Free E-Rhythm",
-                    date: "25th October 2025",
+                    date: formatTourDates(userData.tourDate),
                     tour_link: "https://lagosrhythm.com/"
                 });
             }

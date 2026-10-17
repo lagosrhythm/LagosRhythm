@@ -13,7 +13,7 @@ import toast from "react-hot-toast"
 interface PaymentModalProps {
   isOpen: boolean
   onClose: () => void
-  onPaymentSuccess: (paidPrice: string) => void
+  onPaymentSuccess: (paidPrice: string, transactionId: string) => void
   formData: exclusiveBookingDataType
   setShowCryptoPaymentModal: React.Dispatch<SetStateAction<boolean>>
   isNigeria: boolean
@@ -100,28 +100,23 @@ export default function PaymentModal({ isOpen, onClose, onPaymentSuccess, formDa
     if (isProcessing && paymentCurrency) {
       handleFlutterPayment({
         callback: (response) => {
-          console.log("Flutterwave response:", response)
           setIsProcessing(false)
           
           if (response.status === "completed") {
-            console.log("Payment completed successfully")
             const paidAmount = `${response.currency} ${response.amount}`
             toast.success("Payment successful!")
-            onPaymentSuccess(paidAmount)
+            onPaymentSuccess(paidAmount, String(response.transaction_id))
             closePaymentModal()
             onClose()
           } else if (response.status === "cancelled") {
-            console.log("Payment cancelled by user")
             toast.error("Payment cancelled")
             closePaymentModal()
           } else {
-            console.log("Payment failed or pending:", response.status)
             toast.error(`Payment ${response.status || 'failed'}. Please try again.`)
             closePaymentModal()
           }
         },
         onClose: () => {
-          console.log("Flutterwave modal closed")
           setIsProcessing(false)
         }
       })

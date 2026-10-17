@@ -17,7 +17,7 @@ interface StepFourProps {
     setFormValues: React.Dispatch<React.SetStateAction<inpersonFormUserData>>;
     packageDetails: ThemeJourneyType | null;
     setStepThree: () => void;
-    onSuccessfulPayment: () => Promise<boolean>;
+    onSuccessfulPayment: (transactionId: string) => Promise<boolean>;
 }
 
 export default function StepFour({ formValues, setFormValues, packageDetails, setStepThree, onSuccessfulPayment }: StepFourProps) {
@@ -77,15 +77,13 @@ export default function StepFour({ formValues, setFormValues, packageDetails, se
 
                     //  Verify status
                     if (response.status === "completed") {
-                        console.log("Payment success:", response)
 
                         //  Submit form to Firestore
-                        await onSuccessfulPayment()
+                        await onSuccessfulPayment(String(response.transaction_id))
 
                         // Optional: Redirect user to success page
                         // router.push("/success")
                     } else {
-                        console.log("Payment failed:", response)
                     }
                 },
 
@@ -94,7 +92,7 @@ export default function StepFour({ formValues, setFormValues, packageDetails, se
                 }
             })
         }
-    }, [isProcessing, handleFlutterPayment])
+    }, [isProcessing, handleFlutterPayment, onSuccessfulPayment])
 
 
 

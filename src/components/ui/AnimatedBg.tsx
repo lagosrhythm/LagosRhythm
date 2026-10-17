@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Particles, { initParticlesEngine } from "@tsparticles/react"
-import type { Container } from "@tsparticles/engine"
 import { loadSlim } from "@tsparticles/slim"
 
 export default function AnimatedBg() {
@@ -17,9 +16,7 @@ export default function AnimatedBg() {
     })
   }, [])
 
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    console.log(container)
-  }, [])
+  const particlesLoaded = useCallback(async () => {}, [])
 
   return (
     <>

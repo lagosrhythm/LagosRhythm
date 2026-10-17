@@ -1,10 +1,9 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
+import { getAuth, Auth } from 'firebase-admin/auth';
 
-let dbInstance: Firestore | null = null;
-
-export function getDb(): Firestore {
-  if (dbInstance) return dbInstance;
+function ensureAdminApp() {
+  if (getApps().length) return;
 
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
@@ -14,12 +13,17 @@ export function getDb(): Firestore {
     throw new Error('Firebase Admin env vars are not set');
   }
 
-  if (!getApps().length) {
-    initializeApp({
-      credential: cert({ projectId, clientEmail, privateKey }),
-    });
-  }
+  initializeApp({
+    credential: cert({ projectId, clientEmail, privateKey }),
+  });
+}
 
-  dbInstance = getFirestore();
-  return dbInstance;
+export function getDb(): Firestore {
+  ensureAdminApp();
+  return getFirestore();
+}
+
+export function getAdminAuth(): Auth {
+  ensureAdminApp();
+  return getAuth();
 }

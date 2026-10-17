@@ -4,13 +4,6 @@ import Input from "./common/Input";
 import { X } from "lucide-react";
 
 
-interface ExchangeRateResponse {
-    result: string;
-    base_code: string;
-    conversion_rates: Record<string, number>;
-}
-
-
 interface CurrencyConverterProps {
     setHidePrices: React.Dispatch<SetStateAction<boolean>>
 }
@@ -22,7 +15,7 @@ export default function CurrencyConverter({ setHidePrices }: CurrencyConverterPr
     const [toCurrency, setToCurrency] = useState<string>("NGN")
     const [convertedAmount, setConvertedAmount] = useState<number | null>(null)
     const [currencies, setCurrencies] = useState<string[]>([])
-    const API_KEY = process.env.NEXT_PUBLIC_EXCHANGERATE_API_KEY;
+    const [rates, setRates] = useState<Record<string, number>>({})
     const [showConversionModal, setshowConversionModal] = useState(false)
 
 
@@ -33,9 +26,11 @@ export default function CurrencyConverter({ setHidePrices }: CurrencyConverterPr
             .then((res) => res.json())
             .then((data) => {
                 if (data.conversion_rates) {
+                    setRates(data.conversion_rates);
                     setCurrencies(Object.keys(data.conversion_rates));
                 }
-            });
+            })
+            .catch((err) => console.error("Error loading exchange rates:", err));
 
     }, [])
 
@@ -46,16 +41,12 @@ export default function CurrencyConverter({ setHidePrices }: CurrencyConverterPr
             return;
         }
 
-        fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${fromCurrency}`)
-            .then((res) => res.json())
-            .then((data: ExchangeRateResponse) => {
-                if (data.conversion_rates && data.conversion_rates[toCurrency]) {
-                    const rate = data.conversion_rates[toCurrency]
-                    setConvertedAmount(amount * rate)
-                }
-            })
-            .catch((err) => console.error("Error converting currency:", err))
-        setConvertedAmount(1)
+        // rates from /api/rates are USD based, so cross rates are a simple ratio
+        const fromRate = rates[fromCurrency]
+        const toRate = rates[toCurrency]
+        if (!fromRate || !toRate) return
+
+        setConvertedAmount((amount / fromRate) * toRate)
     }
 
 

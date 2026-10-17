@@ -23,7 +23,8 @@ service cloud.firestore {
     }
 
     function isValidTimestamp(value) {
-      return value is timestamp && value <= now;
+      // allow a few minutes of client clock drift
+      return value is timestamp && value <= request.time + duration.value(5, 'm');
     }
 
     function isStringList(value, maxItems) {
@@ -32,12 +33,24 @@ service cloud.firestore {
 
     match /routes_resources/{routeId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     match /blogs/{blogId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Profiles belong to the signed-in user whose (lower-cased) email is the document id.
+    match /user_profile/{profileId} {
+      allow read, write: if isSignedIn()
+        && request.auth.token.userEmail is string
+        && request.auth.token.userEmail.lower() == profileId.lower();
     }
 
     match /street_rhythm_route_chat/{routeKey} {
@@ -83,71 +96,21 @@ service cloud.firestore {
     }
 
     match /booked_Free_Rhythm/{bookingId} {
-      allow create: if request.resource.data.keys().hasOnly([
-          'fullName',
-          'email',
-          'country',
-          'reasonForJoin',
-          'joiningAs',
-          'otherJoin',
-          'tour_date',
-          'agree_to_TC',
-          'referral',
-          'subscribedAt'
-        ])
-        && isValidString(request.resource.data.fullName, 2, 100)
-        && isValidEmail(request.resource.data.email)
-        && isValidString(request.resource.data.country, 2, 80)
-        && isStringList(request.resource.data.reasonForJoin, 10)
-        && isValidString(request.resource.data.joiningAs, 1, 50)
-        && isValidLooseString(request.resource.data.otherJoin, 80)
-        && isStringList(request.resource.data.tour_date, 10)
-        && request.resource.data.agree_to_TC is bool
-        && isValidString(request.resource.data.referral, 1, 80)
-        && isValidTimestamp(request.resource.data.subscribedAt);
-
+      // Created by /api/free-booking (validation + duplicate check run on the server).
+      allow create, update, delete: if false;
       allow read: if isAdmin();
-      allow update, delete: if false;
     }
 
     match /exclusive_Tour_form/{bookingId} {
-      allow create: if request.resource.data.keys().hasOnly([
-          'tourist',
-          'country',
-          'reasonForJoin',
-          'OtherReason',
-          'joiningAs',
-          'otherJoin',
-          'tourDate',
-          'termsAgreement',
-          'referralSource',
-          'subscribedAt',
-          'time',
-          'discountCode',
-          'paidPrice',
-          'populationSize',
-          'tourTheme',
-          'tourCompleted'
-        ])
-        && isStringList(request.resource.data.tourist, 20)
-        && isValidString(request.resource.data.country, 2, 80)
-        && isStringList(request.resource.data.reasonForJoin, 10)
-        && isValidLooseString(request.resource.data.OtherReason, 120)
-        && isValidString(request.resource.data.joiningAs, 1, 50)
-        && isValidLooseString(request.resource.data.otherJoin, 80)
-        && isStringList(request.resource.data.tourDate, 10)
-        && request.resource.data.termsAgreement is bool
-        && isValidString(request.resource.data.referralSource, 1, 80)
-        && isValidTimestamp(request.resource.data.subscribedAt)
-        && isValidLooseString(request.resource.data.time, 40)
-        && isValidLooseString(request.resource.data.discountCode, 40)
-        && isValidString(request.resource.data.paidPrice, 1, 40)
-        && isValidString(request.resource.data.populationSize, 1, 40)
-        && isValidString(request.resource.data.tourTheme, 1, 80)
-        && request.resource.data.tourCompleted is bool;
-
+      // Created by /api/exclusive-booking after Flutterwave confirms the payment.
+      allow create, update, delete: if false;
       allow read: if isAdmin();
-      allow update, delete: if false;
+    }
+
+    match /inperson_form/{bookingId} {
+      // Created by /api/inperson-booking after Flutterwave confirms the payment.
+      allow create, update, delete: if false;
+      allow read: if isAdmin();
     }
 
     match /Feedback/{feedbackId} {
@@ -179,13 +142,9 @@ service cloud.firestore {
     }
 
     match /subscribers/{subscriberId} {
-      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'subscribedAt'])
-        && isValidString(request.resource.data.name, 1, 100)
-        && isValidEmail(request.resource.data.email)
-        && isValidTimestamp(request.resource.data.subscribedAt);
-
+      // Created by /api/subscribe (validation + duplicate check run on the server).
+      allow create, update, delete: if false;
       allow read: if isAdmin();
-      allow update, delete: if false;
     }
 
     match /livestream_details/{docId} {

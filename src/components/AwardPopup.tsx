@@ -40,7 +40,7 @@ export default function AwardPopup() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to subscribe");
-      toast.success("Welcome to the community! Thanks for subscribing.");
+      toast.success(data.alreadySubscribed ? "You're already subscribed. Thank you!" : "Welcome to the community! Thanks for subscribing.");
       setOpen(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Subscription failed");

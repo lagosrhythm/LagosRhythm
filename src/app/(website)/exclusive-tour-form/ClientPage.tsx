@@ -15,9 +15,7 @@ import { bookFormImages, joinAsData, reasonForJoinOptions, referralSourceData, t
 import { useAppContext } from "../../context/AppContext"
 import type { exclusiveBookingDataType } from "@/Types/UserDataType"
 import DatePicker from "react-datepicker"
-import { addDoc, collection } from "firebase/firestore"
-import { fireDB } from "@/app/config/firebaseClient"
-import { sendConfirmationEmail } from "@/lib/utils"
+import { formatTourDates, sendConfirmationEmail } from "@/lib/utils"
 import { getExclusiveTourPrice } from "@/lib/pricing"
 import ConfirmationModal from "@/components/ConfirmationModal"
 import PaymentModal from "@/components/payments/PaymentModal"
@@ -138,9 +136,7 @@ export default function Page() {
   }
 
   // onSubmit signature to only accept data
-  const completeBooking = async (paidPrice: string) => {
-    console.log("completeBooking called with paidPrice:", paidPrice)
-
+  const completeBooking = async (paidPrice: string, transactionId: string) => {
     if (!pendingFormData) {
       console.error("No pending form data found")
       toast.error("Booking data error. Please try again.")
@@ -153,42 +149,35 @@ export default function Page() {
     setShowPaymentModal(false)
 
     try {
-      console.log("Saving booking to Firestore...")
-      // use the snapshot stored in pendingFormData (already has safe discountCode)
-      const docRef = await addDoc(collection(fireDB, "exclusive_Tour_form"), {
-        tourist: pendingFormData.tourists,
-        country: pendingFormData.country,
-        reasonForJoin: pendingFormData.reasonForJoin,
-        OtherReason: pendingFormData.OtherReason,
-        joiningAs: pendingFormData.joiningAs,
-        otherJoin: pendingFormData.otherJoin,
-        tourDate: pendingFormData.tourDate,
-        termsAgreement: pendingFormData.termsAgreement,
-        referralSource: pendingFormData.referralSource,
-        subscribedAt: new Date(),
-        time: pendingFormData.time,
-        discountCode: pendingFormData.discountCode,
-        // tour details info here
-        paidPrice,
-        populationSize: participantsCount.toString(),
-        tourTheme: selectedTheme,
-        tourCompleted: false,
+      // the server verifies the payment with Flutterwave before saving the booking
+      const bookingRes = await fetch("/api/exclusive-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...pendingFormData,
+          paidPrice,
+          transactionId,
+          populationSize: participantsCount.toString(),
+          tourTheme: selectedTheme,
+        }),
       })
-      console.log("Booking saved to Firestore with ID:", docRef.id)
+
+      if (!bookingRes.ok) {
+        const { error } = await bookingRes.json().catch(() => ({ error: "" }))
+        throw new Error(error || "Booking could not be saved")
+      }
 
       // confirmation email function
       const primaryTourist = pendingFormData.tourists[0]
       if (primaryTourist?.email) {
         try {
-          console.log("Sending confirmation email to:", primaryTourist.email)
           await sendConfirmationEmail({
             name: primaryTourist.fullName || "Guest",
             email: primaryTourist.email,
             service: "Exclusive E-Rhythm",
-            date: "05-09-2026",
+            date: formatTourDates(pendingFormData.tourDate),
             tour_link: "https://lagosrhythm.com/"
           })
-          console.log("Confirmation email sent successfully")
           toast.success("Booking confirmed! Email sent to " + primaryTourist.email)
         }
         catch (err) {
@@ -213,7 +202,6 @@ export default function Page() {
 
       // IMPORTANT: show confirmation modal after payment modal closed
       setTimeout(() => {
-        console.log("Showing confirmation modal...")
         setShowConfirmationModal(true)
       }, 500)
     }

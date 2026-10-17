@@ -10,7 +10,8 @@ import { isAdminEmail } from "@/lib/admin";
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { waitForFirebaseUser } from "@/lib/firebaseAuthBridge"
 
 
 
@@ -20,6 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, isLoaded } = useUser()
   const router = useRouter()
   const isAdmin = isAdminEmail(user?.primaryEmailAddress?.emailAddress)
+  const [firebaseReady, setFirebaseReady] = useState(false)
 
 
   useEffect(() => {
@@ -30,9 +32,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [isLoaded, isAdmin, router])
 
+  // Firestore rules need the Firebase session (admin claim) before any dashboard query runs
+  useEffect(() => {
+    if (!isAdmin) return
+    let cancelled = false
+    waitForFirebaseUser().then(() => {
+      if (!cancelled) setFirebaseReady(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [isAdmin])
+
 
   // Never render dashboard UI until we know the visitor is an admin
-  if (mobileLoading || !isLoaded || !isAdmin) {
+  if (mobileLoading || !isLoaded || !isAdmin || !firebaseReady) {
     return (
       <div className="flex h-screen items-center justify-center w-full">
         <Loader />

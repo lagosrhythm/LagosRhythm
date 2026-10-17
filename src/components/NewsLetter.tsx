@@ -3,8 +3,6 @@
 import React, { useMemo, useState } from "react";
 import Button from "./common/Button";
 import toast from "react-hot-toast";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { fireDB } from "@/app/config/firebaseClient";
 import { motion } from "framer-motion";
 import { newsletterConfirmationMail } from "@/lib/utils";
 
@@ -50,24 +48,21 @@ export default function NewsLetter() {
     // queries the database to see it the subscribers email already exists
     try {
 
-      const subscribersRef = collection(fireDB, "subscribers");
-      const q = query(subscribersRef, where("email", "==", formData.email));
-      const querySnapshot = await getDocs(q);
+      // the server checks for duplicates and stores the subscriber
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: formData.name, email: formData.email, source: "newsletter" }),
+      });
+      const result = await res.json();
 
+      if (!res.ok) throw new Error(result.error || "Subscription failed");
 
-      if (!querySnapshot.empty) {
+      if (result.alreadySubscribed) {
         toast.error("This email is already subscribed to our newsletter");
         setIsSubmitting(false);
         return;
       }
-
-
-      // if email doesn't exist in the database then the subscription goes through
-      await addDoc(collection(fireDB, "subscribers"), {
-        name: formData.name,
-        email: formData.email,
-        subscribedAt: new Date(),
-      });
 
       try {
         await newsletterConfirmationMail({

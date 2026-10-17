@@ -68,7 +68,7 @@ export default function Page() {
         const imageUrl = await uploadImageToCloudinary(file, "profile_images")
 
         // then submitting the profile data to firebase
-        await setDoc(doc(fireDB, "user_profile", email), {
+        await setDoc(doc(fireDB, "user_profile", email.toLowerCase()), {
           fullName: userData.fullName,
           country: userData.country,
           UpdatedAt: new Date(),
@@ -77,7 +77,7 @@ export default function Page() {
 
 
         // fetching the updated profile data from firebase
-        const docSnap = await getDoc(doc(fireDB, "user_profile", email))
+        const docSnap = await getDoc(doc(fireDB, "user_profile", email.toLowerCase()))
 
         // settting the userdata in the context to the updated data
         if (docSnap.exists()) {
@@ -102,14 +102,14 @@ export default function Page() {
     // if the user wants to update only his name or country
     if (!file) {
       try {
-        await setDoc(doc(fireDB, "user_profile", email), {
+        await setDoc(doc(fireDB, "user_profile", email.toLowerCase()), {
           fullName: userData.fullName,
           country: userData.country,
           UpdatedAt: new Date(),
           imageUrl: userData.imageUrl ?? ""
         });
 
-        const docSnap = await getDoc(doc(fireDB, "user_profile", email));
+        const docSnap = await getDoc(doc(fireDB, "user_profile", email.toLowerCase()));
         if (docSnap.exists()) {
           setUserData(docSnap.data() as ProfileDataType);
         }

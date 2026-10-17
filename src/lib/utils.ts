@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import emailjs from 'emailjs-com';
-import { collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { fireDB } from "@/app/config/firebaseClient";
 
 
@@ -36,7 +36,6 @@ export const sendConfirmationEmail = (data: {
     return Promise.reject(new Error("EmailJS not configured. Check .env.local for NEXT_PUBLIC_EMAILJS_* variables"))
   }
 
-  console.log("Sending email via EmailJS:", { to: data.email, service: data.service })
   
   return emailjs.send(
     serviceId,
@@ -163,19 +162,14 @@ export async function uploadImageToCloudinary(file: File, presetName: string) {
 
 
 
-// function to add user to the database on successful signup
-export const addUserToDb = async (user: string) => {
-  try {
-    await setDoc(doc(fireDB, "user_profile", user), {
-      fullName: "",
-      country: "",
-      createdAt: new Date()
-    })
-  }
-  catch (firestoreError) {
-    console.error("Error writing to firestore:", firestoreError)
-  }
+// Human-readable tour date(s) for confirmation emails, from the dates the visitor picked
+export function formatTourDates(dates: string[] | undefined, fallback = "To be announced"): string {
+  const formatted = (dates ?? [])
+    .map((d) => new Date(d))
+    .filter((d) => !Number.isNaN(d.getTime()))
+    .map((d) => d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }))
 
+  return formatted.length > 0 ? formatted.join(", ") : fallback
 }
 
 

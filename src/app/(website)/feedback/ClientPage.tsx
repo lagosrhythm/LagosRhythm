@@ -53,18 +53,15 @@ export default function FeedbackPage() {
 
 
     const publicTestimonialValue = watch("publicTestimonial")
-    const apiKey = process.env.NEXT_PUBLIC_MAILBOX_API_KEY
 
 
     const onSubmit = async (data: FormData) => {
         // Manual email validation using external API
         try {
-            const validationRes = await fetch(
-                `https://apilayer.net/api/check?access_key=${apiKey}&email=${data.email}&smtp=1&format=1`,
-            )
+            const validationRes = await fetch(`/api/validate-email?email=${encodeURIComponent(data.email)}`)
             const emailValidationData = await validationRes.json()
 
-            if (!(emailValidationData.smtp_check && emailValidationData.format_valid && emailValidationData.mx_found)) {
+            if (!validationRes.ok || !emailValidationData.valid) {
                 toast.error("Email address does not exist or is invalid.")
                 return
             }
@@ -79,7 +76,7 @@ export default function FeedbackPage() {
                 name: data.name,
                 email: data.email,
                 experience: data.experienceDescription,
-                experience_rating: data.experienceRating,
+                experience_rating: Number(data.experienceRating) || 0,
                 joinReason: data.tourJoined,
                 publishTestimonial: data.consentPublishTestimonial,
                 store_data: data.consentStoreFeedback,

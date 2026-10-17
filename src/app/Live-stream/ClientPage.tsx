@@ -28,11 +28,10 @@ const hasTourEnded = now > TOUR_END;
   const { userData } = useAppContext()
   const [userCount, setUserCount] = useState(0)
 
-  const tourTime = new Date(mock_tour_data.date)
-
   // Countdown timer
   useEffect(() => {
-    const endTime = new Date(tourTime.getTime() + 1 * 60 * 60 * 1000) // 2 hours after start
+    const tourTime = new Date(mock_tour_data.date)
+    const endTime = new Date(tourTime.getTime() + 1 * 60 * 60 * 1000) // 1 hour after start
 
     const interval = setInterval(() => {
       const now = new Date()
@@ -41,7 +40,7 @@ const hasTourEnded = now > TOUR_END;
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [tourTime])
+  }, [])
 
   // Socket connection for user count
   useEffect(() => {

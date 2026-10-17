@@ -4,7 +4,8 @@ import { useAppContext } from "@/app/context/AppContext"
 import ReusableHero from "@/components/ReusableHero"
 import { BlogDataType } from "@/Types/blogTypes"
 import { useParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import DOMPurify from "dompurify"
 import JsonLd from "@/components/seo/JsonLd"
 
 export default function Page() {
@@ -20,6 +21,12 @@ export default function Page() {
   }, [id, blogs])
 
 
+
+  // Blog bodies are rich text from the editor; strip scripts/handlers before rendering
+  const safeHtml = useMemo(
+    () => (currentBlog ? DOMPurify.sanitize(currentBlog.text, { USE_PROFILES: { html: true } }) : ""),
+    [currentBlog],
+  )
 
   if (!currentBlog)
     return (
@@ -58,7 +65,7 @@ export default function Page() {
       <ReusableHero image={currentBlog.image} pageTitle={currentBlog.title} />
       <div className="w-full  text-[#05073C] bg-[#FDF4F1] px-[6%] py-[4%] flex items-start flex-col gap-3 relative  " >
         <h3 className="text-2xl font-bold  font-merriweather " > {currentBlog.title}</h3>
-        <div className="font-lato text-justify text-lg font-medium" dangerouslySetInnerHTML={{__html: currentBlog.text}} />
+        <div className="font-lato text-justify text-lg font-medium" dangerouslySetInnerHTML={{ __html: safeHtml }} />
 
 
 

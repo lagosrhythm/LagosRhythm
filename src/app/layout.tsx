@@ -10,6 +10,7 @@ import Providers from "./providers/Providers";
 import { metadataKeywords } from "@/data/metadata";
 import JsonLd from "@/components/seo/JsonLd";
 import AwardPopup from "@/components/AwardPopup";
+import FirebaseAuthBridge from "@/components/FirebaseAuthBridge";
 
 
 
@@ -149,6 +150,7 @@ export default function RootLayout({
         <Providers>
           <ClerkProvider>
             <LagosRhythmProvider>
+              <FirebaseAuthBridge />
               {children}
               <Toaster position="bottom-right" />
               <AwardPopup />

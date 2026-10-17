@@ -21,7 +21,6 @@ export default function Page() {
 
                 const items: ExclusiveTourBookingDataType[] = querySnapshot.docs.map((doc) => {
                     const data = doc.data()
-                    console.log(data)
                     return {
                         id: doc.id,
                         tourDate: data.tourDate,

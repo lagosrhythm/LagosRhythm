@@ -53,7 +53,6 @@ export default function Page() {
                     }
 
                 })
-                console.log("The feedbacks:", items)
                 setFeedbackData(items)
 
             } catch (error) {

@@ -13,6 +13,7 @@ import { StreetRhythmRouteBundle } from "@/Types/StreetRhythmRouteType";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { buildStreetRhythmRouteBundle } from "@/lib/street-rhythm";
+import { waitForFirebaseUser } from "@/lib/firebaseAuthBridge";
 
 // ====================== Context Interface ======================
 interface AppContextProps {
@@ -174,7 +175,9 @@ export const LagosRhythmProvider = ({ children }: { children: React.ReactNode })
   const fetchUserData = async (email: string) => {
     if (!email) return;
     try {
-      const docSnap = await getDoc(doc(fireDB, "user_profile", email));
+      // user_profile is only readable by its owner, so wait for the Firebase session
+      await waitForFirebaseUser();
+      const docSnap = await getDoc(doc(fireDB, "user_profile", email.toLowerCase()));
       if (docSnap.exists()) {
         const data = docSnap.data() as ProfileDataType;
         setUserData(data);

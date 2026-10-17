@@ -60,8 +60,6 @@ export default function AddBlogModal({ setOpenBlogModal, addBlogToUI }: AddBlogM
         const data = await response.json();
 
         // Log EVERYTHING Cloudinary returns
-        console.log("Status:", response.status);
-        console.log("Cloudinary Response:", data);
 
         if (!response.ok) {
             throw new Error(data.error?.message || "Image upload failed");

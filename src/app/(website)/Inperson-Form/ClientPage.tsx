@@ -1,6 +1,5 @@
 "use client";
 
-import { fireDB } from "@/app/config/firebaseClient";
 import { useAppContext } from "@/app/context/AppContext";
 import StepFour from "@/components/inperson_tour_form_steps/StepFour";
 import { StepOne } from "@/components/inperson_tour_form_steps/StepOne";
@@ -9,7 +8,6 @@ import { StepTwo } from "@/components/inperson_tour_form_steps/StepTwo";
 import { themeJourneys } from "@/data/data";
 import { inpersonFormUserData } from "@/Types/inpersonFormDataType";
 import { ThemeJourneyType } from "@/Types/ThemeJourneyType";
-import { addDoc, collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
@@ -110,17 +108,31 @@ export default function Page() {
         const group = selectedThemeTest.minorPackages?.find(p => p.title === inpersonTourPackage) || selectedThemeTest.majorPackages?.find(p => p.title === inpersonTourPackage);
         const option = group?.options.find(o => o.duration === formValues.duration);
 
-        setFormValues({
-            ...formValues,
-            price: option?.price && formValues.paymentType === "Deposit (50%)" ? option?.price / 2 : option?.price ?? 0
-        })
-    }, [formValues.duration, formValues.paymentType]);
+        setFormValues((prev) => ({
+            ...prev,
+            price: option?.price && prev.paymentType === "Deposit (50%)" ? option?.price / 2 : option?.price ?? 0
+        }))
+    }, [formValues.duration, formValues.paymentType, selectedInpersonTheme, inpersonTourPackage]);
 
 
 
-    const saveToDatabase = async () => {
+    const saveToDatabase = async (transactionId: string) => {
         try {
-            await addDoc(collection(fireDB, "inperson_form"), { ...formValues });
+            const res = await fetch("/api/inperson-booking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    transactionId,
+                    form: formValues,
+                    theme: selectedInpersonTheme,
+                    packageTitle: inpersonTourPackage,
+                }),
+            });
+
+            if (!res.ok) {
+                const { error } = await res.json().catch(() => ({ error: "" }));
+                throw new Error(error || "Booking could not be saved");
+            }
 
             setFormValues({
                 fullName: "",
@@ -150,6 +162,7 @@ export default function Page() {
             return true;
         } catch (error) {
             console.error(error);
+            toast.error(error instanceof Error ? error.message : "Booking could not be saved. Please contact support.");
             return false;
         }
     };
