@@ -1,9 +1,9 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Firestore } from 'firebase-admin/firestore';
 
-let dbInstance: any = null;
+let dbInstance: Firestore | null = null;
 
-export function getDb() {
+export function getDb(): Firestore {
   if (dbInstance) return dbInstance;
 
   const projectId = process.env.FIREBASE_PROJECT_ID;

@@ -21,6 +21,7 @@ export default function EventAdminClient() {
   const [authed, setAuthed] = useState(false);
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // check sessionStorage on mount
   useEffect(() => {
@@ -33,12 +34,18 @@ export default function EventAdminClient() {
   useEffect(() => {
     if (!authed) return;
     fetch("/api/referral-stats")
-      .then((r) => r.json())
+      .then(async (r) => {
+        if (!r.ok) throw new Error(r.status === 401 || r.status === 403 ? "Sign in with an admin account to view referral stats." : "Failed to load stats.");
+        return r.json();
+      })
       .then((data) => {
         setStats(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err: Error) => {
+        setLoadError(err.message);
+        setLoading(false);
+      });
   }, [authed]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -91,6 +98,8 @@ export default function EventAdminClient() {
   }
 
   if (loading) return <div className="p-8 text-center">Loading…</div>;
+
+  if (loadError) return <div className="p-8 text-center text-red-600">{loadError}</div>;
 
   const entries = Object.entries(stats);
 

@@ -42,8 +42,8 @@ export default function AwardPopup() {
       if (!res.ok) throw new Error(data.error || "Failed to subscribe");
       toast.success("Welcome to the community! Thanks for subscribing.");
       setOpen(false);
-    } catch (err: any) {
-      toast.error(err.message || "Subscription failed");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Subscription failed");
     } finally {
       setLoading(false);
     }

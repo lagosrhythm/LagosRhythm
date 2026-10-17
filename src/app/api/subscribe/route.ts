@@ -23,9 +23,10 @@ export async function POST(req: NextRequest) {
   try {
     initAdmin();
     const db = getFirestore();
-    const { email, name } = await req.json();
+    const { email: rawEmail, name } = await req.json();
+    const email = typeof rawEmail === "string" ? rawEmail.trim().toLowerCase() : "";
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     await db.collection("subscribers").add({
       email,
-      name: name?.trim() || "",
+      name: typeof name === "string" ? name.trim().slice(0, 100) : "",
       subscribedAt: new Date(),
       source: "award_popup",
     });
@@ -45,8 +46,8 @@ export async function POST(req: NextRequest) {
     // EmailJS confirmation can be added here if needed using server-side EmailJS
 
     return NextResponse.json({ message: "Subscribed" }, { status: 201 });
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: err.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ error: "Server error. Please try again." }, { status: 500 });
   }
 }

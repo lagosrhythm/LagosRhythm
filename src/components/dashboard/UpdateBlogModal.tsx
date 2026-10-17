@@ -1,4 +1,5 @@
 import { X } from "lucide-react"
+import { isAdminEmail } from "@/lib/admin"
 import React, { SetStateAction, useEffect, useState } from "react"
 import Loader from "../common/Loader"
 import { Button } from "../ui/button"
@@ -121,7 +122,7 @@ export default function UpdateBlogModal({ setShowEditBlogModal, selectedIndex, u
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (user?.primaryEmailAddress?.emailAddress !== "chiscookeke11@gmail.com" && user?.primaryEmailAddress?.emailAddress !== "damola-o@lagosrhythm.com") {
+        if (!isAdminEmail(user?.primaryEmailAddress?.emailAddress)) {
             toast.error("You don't have permission to do this")
             return
         }

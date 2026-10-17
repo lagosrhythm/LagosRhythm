@@ -5,6 +5,7 @@ import Loader from "@/components/common/Loader";
 import Header from "@/components/dashboard/Header";
 import SideNav from "@/components/dashboard/SideNav";
 import { useMobile } from "@/hooks/use-mobile";
+import { isAdminEmail } from "@/lib/admin";
 
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
@@ -16,22 +17,22 @@ import { useEffect } from "react"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isLoading: mobileLoading, isMobile } = useMobile()
-  const { user } = useUser()
+  const { user, isLoaded } = useUser()
   const router = useRouter()
+  const isAdmin = isAdminEmail(user?.primaryEmailAddress?.emailAddress)
 
 
   useEffect(() => {
-    if (!user) return
+    if (!isLoaded) return
 
-    const email = user.primaryEmailAddress?.emailAddress
-
-    if (!user || email !== "chiscookeke11@gmail.com" && email !== "damola-o@lagosrhythm.com") {
-      router.push("/")
+    if (!isAdmin) {
+      router.replace("/")
     }
-  }, [user, router])
+  }, [isLoaded, isAdmin, router])
 
 
-  if (mobileLoading) {
+  // Never render dashboard UI until we know the visitor is an admin
+  if (mobileLoading || !isLoaded || !isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center w-full">
         <Loader />

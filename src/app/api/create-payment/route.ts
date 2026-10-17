@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/requireAdmin';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.lagosrhythm.com';
 
 export async function POST(req: Request) {
+  // Not used by the site yet; keep it admin-only until the NowPayments flow is finished.
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     // In a real application, you would get the amount and currency from the request body
     // and validate them.
@@ -32,16 +39,17 @@ export async function POST(req: Request) {
         pay_currency: 'usdttrc20', // Specify USDT on TRON
         order_id: order_id,
         order_description: order_description,
-        success_url: 'https://your-app.com/success', // Optional: Redirect after successful payment
-        cancel_url: 'https://your-app.com/cancel',   // Optional: Redirect after cancelled payment
-        ipn_callback_url: 'https://4c17bdd122b7.ngrok-free.app/api/nowpayments-webhook', // Crucial for payment status updates
+        success_url: `${siteUrl}/success`,
+        cancel_url: `${siteUrl}/cancel`,
+        // TODO: no /api/nowpayments-webhook route exists yet; add one before using this endpoint.
+        ipn_callback_url: `${siteUrl}/api/nowpayments-webhook`,
       }),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       console.error('NowPayments API error:', errorData);
-      return NextResponse.json({ error: 'Failed to create payment with NowPayments', details: errorData }, { status: response.status });
+      return NextResponse.json({ error: 'Failed to create payment with NowPayments' }, { status: 502 });
     }
 
     const paymentData = await response.json();

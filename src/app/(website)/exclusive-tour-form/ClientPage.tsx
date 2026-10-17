@@ -194,11 +194,11 @@ export default function Page() {
         catch (err) {
           console.error("Failed to send confirmation email:", err)
           // Don't fail the booking if email fails - still show confirmation
-          toast.warning("Booking saved but email could not be sent. Check your inbox later.")
+          toast("Booking saved but email could not be sent. Check your inbox later.", { icon: "⚠️" })
         }
       } else {
         console.error("No email found for primary tourist")
-        toast.warning("Booking saved but no email address found")
+        toast("Booking saved but no email address found", { icon: "⚠️" })
       }
 
       // clear form only on success
@@ -336,8 +336,8 @@ export default function Page() {
 
 
                 <p className="font-medium text-sm md:text-base  font-lato">
-                  Welcome! I'm your Lagos Rhythm Storykeeper. <br />
-                  I'm here to help you experience Lagos differently.</p>
+                  Welcome! I&apos;m your Lagos Rhythm Storykeeper. <br />
+                  I&apos;m here to help you experience Lagos differently.</p>
               </div>
             </div>
 

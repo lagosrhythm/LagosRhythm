@@ -1,5 +1,6 @@
 "use client"
 import type React from "react"
+import { isAdminEmail } from "@/lib/admin"
 import { type SetStateAction, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -72,7 +73,7 @@ export default function AddBlogModal({ setOpenBlogModal, addBlogToUI }: AddBlogM
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (user?.primaryEmailAddress?.emailAddress !== "chiscookeke11@gmail.com" && user?.primaryEmailAddress?.emailAddress !== "damola-o@lagosrhythm.com") {
+        if (!isAdminEmail(user?.primaryEmailAddress?.emailAddress)) {
             toast.error("You don't have permission to do this")
             return
         }
