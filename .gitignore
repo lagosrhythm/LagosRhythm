@@ -74,4 +74,8 @@ firestore-deploy.log
 # Large public media (keep tracked files explicit)
 public/hero-video.mp4
 
+# Anniversary edition is generated from Anniversary/site/ at build time
+# (npm run anniversary:sync, also run automatically by `npm run build`)
+/public/anniversary/
+
 # Note: media/ folder intentionally NOT ignored so project media is tracked

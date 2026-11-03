@@ -1,0 +1,24 @@
+{
+  "name": "lagosrhythm-anniversary-edition",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lagos Rhythm — 365 Days of The Frequency. Standalone 1-Year Anniversary special publication.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify.mjs",
+    "check": "node scripts/verify.mjs",
+    "dev": "npx --yes serve@14 . -l 3000",
+    "sync": "node scripts/sync-to-main.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "lagos-rhythm",
+    "anniversary",
+    "editorial",
+    "static-site",
+    "vercel"
+  ]
+}

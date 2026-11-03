@@ -5,9 +5,11 @@
   "packageManager": "npm@10",
   "scripts": {
     "dev": "next dev",
-    "build": "tsc --noEmit && next build",
+    "build": "node Anniversary/site/scripts/sync-to-main.mjs && tsc --noEmit && next build",
     "start": "next start",
     "lint": "next lint",
+    "anniversary:verify": "node Anniversary/site/scripts/verify.mjs",
+    "anniversary:sync": "node Anniversary/site/scripts/sync-to-main.mjs",
     "street-rhythm:validate": "node scripts/validate-street-rhythm-routes.mjs",
     "street-rhythm:import": "node scripts/import-street-rhythm-routes.mjs",
     "firebase:set-admin-claims": "node scripts/set-firebase-admin-claims.mjs",

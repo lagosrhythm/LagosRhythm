@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Single-issue special publication — no crawlable sub-pages.
+Disallow: /404.html
