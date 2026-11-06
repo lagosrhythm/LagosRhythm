@@ -150,7 +150,7 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 a { color: inherit; text-decoration: none; }
 
 /* Sharp editorial geometry everywhere (DESIGN.md "Shapes") */
-button, input, .plate, .stat, .card, .gallery__item, .btn, .chip, img, .lead-plate, .pullquote {
+button, input, .btn, .chip, img, .pullquote, .chapter-figure__frame {
   border-radius: 0;
 }
 
@@ -518,56 +518,38 @@ main { padding-top: var(--masthead-h); }
    9. SECTION HEADERS
    -------------------------------------------------------------------------- */
 .sect-head { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-lg); }
-.sect-head--split {
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  padding-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--hairline);
-}
-.sect-head--split > div { display: flex; flex-direction: column; gap: 6px; }
-.sect-head__note { color: var(--on-surface-variant); max-width: 26rem; }
-.sect-head__aside { color: var(--on-surface-variant); white-space: nowrap; }
 
-.sect-head--feature { gap: var(--space-sm); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--hairline); }
-.headline-lg--xl { max-width: 46rem; }
-@media (min-width: 1024px) {
-  .headline-lg--xl { font-size: clamp(2.5rem, 3vw, 3.375rem); line-height: 1.15; }
+/* Chapter opener: label + title, ruled underneath */
+.sect-head--chapter {
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--hairline);
+  max-width: 46rem;
 }
-.meta-row { display: flex; flex-wrap: wrap; gap: var(--space-sm); color: var(--on-surface-variant); }
+.sect-head--chapter h2 { text-wrap: balance; }
 
 /* --------------------------------------------------------------------------
-   10. FOREWORD PLATE
+   10. ESSAY PROSE, BYLINE & CHAPTER PLATES
    -------------------------------------------------------------------------- */
-.plate {
-  position: relative;
-  background: var(--sc-lowest);
-  padding: clamp(2rem, 5vw, 4rem);
-  box-shadow: var(--shadow-plate);
-  margin-top: 1.5rem;
-}
-.plate__badge {
-  position: absolute;
-  top: -0.75rem;
-  left: clamp(1.25rem, 4vw, 2.5rem);
-  background: var(--primary);
-  color: var(--on-primary);
-  padding: var(--space-xs) var(--space-md);
-}
-.byline { color: var(--on-surface-variant); margin-top: 2px; }
-
 .prose {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
   font-size: var(--fs-body-lg);
-  line-height: 1.75;
+  line-height: 1.78;
   color: var(--on-surface);
 }
 .prose p { text-align: justify; hyphens: auto; }
-.prose__lead { position: relative; }
+
+/* Long-form measure: keeps the column at a readable ~70 characters */
+.prose--essay { max-width: 44rem; }
+
+/* Justification needs width to work with. Below the tablet breakpoint it
+   only stretches word spacing, so phones read flush-left instead. */
+@media (max-width: 767px) {
+  .prose p { text-align: left; }
+}
+
 .dropcap {
   float: left;
   font-family: var(--font-display);
@@ -579,101 +561,57 @@ main { padding-top: var(--masthead-h); }
   font-weight: 400;
 }
 
-.stamp {
-  margin-top: var(--space-lg);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--hairline);
+/* Contributor credits strip under the hero */
+.credits {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
+  gap: var(--space-md) var(--space-xl);
+  padding-block: var(--space-md);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
 }
-.stamp__id { display: flex; align-items: center; gap: var(--space-md); }
-.stamp__mark {
-  width: 40px; height: 40px;
-  display: grid; place-items: center;
-  background: var(--primary);
-  color: var(--on-primary);
+.credits__item { display: flex; align-items: baseline; gap: var(--space-sm); }
+.credits__name {
   font-family: var(--font-display);
-  font-size: 1.375rem;
+  font-size: 1.125rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
-.stamp__lines { display: flex; flex-direction: column; }
-.stamp__lines .body-sm { color: var(--on-surface-variant); }
-
-/* --------------------------------------------------------------------------
-   11. STAT CARDS
-   -------------------------------------------------------------------------- */
-.stats {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-lg);
+.credits__meta { margin-left: auto; color: var(--outline); }
+@media (max-width: 639px) {
+  .credits__meta { margin-left: 0; }
 }
-@media (min-width: 768px) { .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-.stat {
+/* Chapter opener image */
+.chapter-figure { display: flex; flex-direction: column; }
+.chapter-figure__frame {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--surface-variant);
+  box-shadow: var(--shadow-plate);
+}
+.chapter-figure__frame img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.chapter-figure:hover .chapter-figure__frame img { transform: scale(1.03); }
+.chapter-figure figcaption {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  background: var(--sc-lowest);
-  border: 1px solid var(--hairline-strong);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  box-shadow: var(--shadow-plate);
-  transition: box-shadow 200ms ease, transform 200ms ease, border-color 200ms ease;
+  gap: 4px;
+  padding-top: var(--space-sm);
+  max-width: 46rem;
 }
-.stat:hover { box-shadow: var(--shadow-plate-lift); transform: translateY(-3px); border-color: rgba(167, 52, 0, 0.35); }
-
-.stat__top { display: flex; align-items: center; justify-content: space-between; color: var(--on-surface-variant); }
-.stat__body { display: flex; flex-direction: column; gap: var(--space-xs); }
-.stat__value {
-  font-family: var(--font-display);
-  font-size: clamp(3.5rem, 6vw, 5.25rem);
-  line-height: 0.95;
-  font-weight: 300;
-  color: var(--primary);
-  letter-spacing: -0.03em;
-  font-variant-numeric: lining-nums tabular-nums;
-}
-.stat__plus { font-weight: 300; }
-.rule { display: block; width: 3rem; height: 1px; background: var(--sc-highest); margin-block: 0.75rem; }
-.stat__body .headline-sm { font-weight: 400; }
-.stat__body .body-sm { color: var(--on-surface-variant); margin-top: 4px; }
+.chapter-figure figcaption .body-sm { color: var(--on-surface-variant); }
 
 /* --------------------------------------------------------------------------
-   12. LONGFORM FEATURE
+   11. PULL QUOTES
    -------------------------------------------------------------------------- */
-.lead-plate {
-  background: var(--sc-lowest);
-  padding: clamp(1.5rem, 4vw, 3rem);
-  font-size: var(--fs-body-lg);
-  line-height: 1.75;
-  font-style: italic;
-  color: var(--on-surface);
-  box-shadow: var(--shadow-plate);
-}
-
-.chapter { display: flex; flex-direction: column; gap: var(--space-md); margin-top: clamp(2.5rem, 5vw, 4rem); }
-.chapter__head { display: flex; align-items: baseline; gap: var(--space-sm); }
-.chapter__num {
-  font-family: var(--font-display);
-  font-size: var(--fs-h-md);
-  line-height: var(--lh-h-md);
-  letter-spacing: var(--ls-h-md);
-  color: var(--primary);
-  font-weight: 400;
-  flex: none;
-}
-.chapter__body {
-  color: var(--on-surface-variant);
-  text-align: justify;
-  hyphens: auto;
-  max-width: 62rem;
-}
-
 .pullquote {
   margin-block: var(--space-md);
+  max-width: 46rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -715,82 +653,7 @@ main { padding-top: var(--masthead-h); }
 .copybtn.is-copied { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
 
 /* --------------------------------------------------------------------------
-   13. GALLERY
-   -------------------------------------------------------------------------- */
-.gallery {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-  margin-top: var(--space-sm);
-}
-@media (min-width: 768px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-
-.gallery__item {
-  display: flex;
-  flex-direction: column;
-  background: var(--sc-lowest);
-  border: 1px solid var(--hairline);
-  overflow: hidden;
-  box-shadow: var(--shadow-plate);
-}
-.gallery__frame { aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-variant); }
-.gallery__frame img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
-  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.gallery__item:hover .gallery__frame img { transform: scale(1.05); }
-.gallery__caption { padding: var(--space-md); display: flex; flex-direction: column; gap: 4px; }
-.gallery__caption .body-sm { color: var(--on-surface-variant); }
-
-/* --------------------------------------------------------------------------
-   14. MOMENT CARDS
-   -------------------------------------------------------------------------- */
-.cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-lg);
-}
-@media (min-width: 768px) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
-.card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: var(--sc-lowest);
-  border: 1px solid var(--hairline-strong);
-  overflow: hidden;
-  box-shadow: var(--shadow-plate);
-  transition: box-shadow 200ms ease, transform 200ms ease, border-color 200ms ease;
-}
-.card:hover { box-shadow: var(--shadow-plate-lift); transform: translateY(-3px); border-color: rgba(167, 52, 0, 0.35); }
-
-.card__media { aspect-ratio: 16 / 10; overflow: hidden; background: var(--sc-high); }
-.card__media img {
-  width: 100%; height: 100%;
-  object-fit: cover; object-position: center;
-  transition: transform 500ms cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.card:hover .card__media img { transform: scale(1.05); }
-
-.card__body { padding: clamp(1.25rem, 2.5vw, 2rem); display: flex; flex-direction: column; gap: var(--space-xs); flex: 1; }
-.card__body .headline-sm { transition: color 150ms linear; }
-.card:hover .card__body .headline-sm { color: var(--primary); }
-.card__body .body-md { color: var(--on-surface-variant); margin-top: var(--space-xs); }
-
-.card__foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  padding: var(--space-md) clamp(1.25rem, 2.5vw, 2rem) 1.5rem;
-  color: var(--on-surface-variant);
-}
-.card__foot .ico { transition: transform 200ms ease, color 200ms linear; }
-.card:hover .card__foot .ico { transform: translateX(4px); color: var(--primary); }
-
-/* --------------------------------------------------------------------------
-   15. CTA
+   12. CTA
    -------------------------------------------------------------------------- */
 .cta {
   position: relative;
@@ -846,7 +709,7 @@ main { padding-top: var(--masthead-h); }
 .cta__copy { color: var(--surface-dim); }
 
 /* --------------------------------------------------------------------------
-   16. COLOPHON
+   13. COLOPHON
    -------------------------------------------------------------------------- */
 .colophon {
   background: var(--sc-low);
@@ -874,7 +737,7 @@ main { padding-top: var(--masthead-h); }
 .colophon__meta a:hover { color: var(--on-surface); }
 
 /* --------------------------------------------------------------------------
-   17. REVEAL (progressive enhancement — only active when JS runs)
+   14. REVEAL (progressive enhancement — only active when JS runs)
    -------------------------------------------------------------------------- */
 .js .reveal {
   opacity: 0;
@@ -894,7 +757,7 @@ main { padding-top: var(--masthead-h); }
 }
 
 /* --------------------------------------------------------------------------
-   18. PRINT / SAVE-AS-PDF
+   15. PRINT / SAVE-AS-PDF
    -------------------------------------------------------------------------- */
 @media print {
   @page { margin: 14mm; size: A4; }
@@ -910,7 +773,7 @@ main { padding-top: var(--masthead-h); }
 
   .band, .band--low, .hero, .colophon { background: #fff !important; padding-block: 1.25rem !important; }
 
-  .plate, .stat, .card, .lead-plate, .pullquote, .gallery__item, .hero__frame {
+  .pullquote, .chapter-figure__frame, .hero__frame {
     box-shadow: none !important;
     transform: none !important;
     border: 1px solid #bbb !important;
@@ -934,13 +797,13 @@ main { padding-top: var(--masthead-h); }
   h2 { font-size: 17pt !important; }
   h3 { font-size: 12.5pt !important; }
   .display-hero, .headline-lg, .headline-md, .headline-sm { break-after: avoid; page-break-after: avoid; }
-  .stat__value { font-size: 40pt !important; }
 
-  .prose p, .chapter__body { text-align: left !important; }
+  .prose p { text-align: left !important; }
 
   img { max-width: 100% !important; }
-  .gallery__frame, .card__media, .hero__frame { aspect-ratio: auto !important; }
-  .gallery__frame img, .card__media img, .hero__frame img { height: auto !important; }
+  .chapter-figure__frame, .hero__frame { aspect-ratio: auto !important; }
+  .chapter-figure__frame img, .hero__frame img { height: auto !important; }
+  .chapter-figure, .credits, .sect-head--chapter { break-inside: avoid; page-break-inside: avoid; }
 
   .js .reveal { opacity: 1 !important; transform: none !important; }
 

@@ -1,8 +1,12 @@
-# Lagos Rhythm — 1-Year Anniversary Special Publication
+# Lagos Rhythm — Born From This Ground
 
-A standalone, dependency-free static site for the **365 Days of The Frequency**
-anniversary edition. Hand-written HTML/CSS/JS implementing the design system in
-[`../DESIGN.md`](../DESIGN.md), with editorial copy taken from `../code.html`.
+A standalone, dependency-free static site for **Born From This Ground**, the
+Lagos Rhythm anniversary publication (October 2026). Hand-written HTML/CSS/JS
+implementing the design system in [`../DESIGN.md`](../DESIGN.md).
+
+Editorial copy — the full eight-chapter essay by **Damola Olaleye**, edited by
+**Deborah Ogunlolu** — lives verbatim in `index.html`. It is the publication;
+the layout exists to serve it.
 
 No build step, no framework, no CDN runtime — it deploys as-is.
 
@@ -12,7 +16,7 @@ No build step, no framework, no CDN runtime — it deploys as-is.
 
 ```
 Anniversary/site/
-├── index.html          the publication (hero → foreword → stats → longform → moments → CTA → colophon)
+├── index.html          the publication (hero → byline → 8 chapters → CTA → colophon)
 ├── 404.html            archive-styled not-found page
 ├── robots.txt
 ├── favicon.ico
@@ -88,13 +92,15 @@ Tokens in `assets/css/styles.css` §1 are transcribed 1:1 from `DESIGN.md`.
 
 **Responsive behaviour** (verified at 360 / 390 / 430 / 768 / 1024 / 1440 / 1920):
 
-| Width | Hero aspect | Stats / cards | Masthead |
-|---|---|---|---|
-| < 768 | 16/9 | 1 column | back-arrow + logo, short "Oct 2026" chip |
-| 768–1199 | 16/9 | 3 columns | full "Special Edition" chip |
-| ≥ 1200 | 21/9 | 3 columns | section nav (issue chip hidden to avoid crowding) |
+| Width | Hero aspect | Chapters / plates | Prose | Masthead |
+|---|---|---|---|---|
+| < 768 | 16/9 | stacked, full-bleed figures | flush-left (justification stretches word-spacing too far on phones) | back-arrow + logo, short "Oct 2026" chip |
+| 768–1199 | 16/9 | stacked, 16/9 figures | justified, 704px measure | full "Special Edition" chip |
+| ≥ 1200 | 21/9 | stacked, 16/9 figures | justified, 704px measure | section nav (issue chip hidden to avoid crowding) |
 
-No horizontal overflow at any of the seven tested widths.
+The essay is a single column of eight chapters at every width; five chapters
+open with a photographic plate, four pull quotes are copyable. No horizontal
+overflow at any of the seven tested widths.
 
 **Print**: both "Download PDF" buttons call `window.print()`; `@media print`
 strips the masthead/progress bar, flattens shadows, forces single-column images
@@ -112,6 +118,11 @@ Gates on: every local asset resolves, no hot-linked or CDN-hosted imagery, no
 Tailwind/framework CDN runtime, no placeholder copy, every `<img>` has
 `width`/`height`/`alt` (CLS), required deploy files present, total weight
 under 2.5 MB.
+
+It also enforces the editorial copy itself: `REQUIRED_COPY` lists the strings
+the publication cannot exist without (all eight chapter titles, both bylines,
+"consent, credit, return", *oríkì*, …) and `FORBIDDEN_COPY` blocks superseded
+drafts of the page. At least three pull quotes must remain copyable.
 
 Current: **24 files, ~1.67 MB.**
 

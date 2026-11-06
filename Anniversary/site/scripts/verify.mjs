@@ -47,6 +47,37 @@ const PLACEHOLDER_PATTERNS = [
 const MAX_TOTAL_WEIGHT = 2.5 * 1024 * 1024; // 2.5 MB for the whole published folder
 const MAX_SINGLE_IMAGE = 450 * 1024; // 450 KB per image (hero only)
 
+/* "Born From This Ground" — the edition's editorial copy. These are the
+   strings that must survive every edit; if one goes missing the publication
+   is no longer the publication. */
+const REQUIRED_COPY = [
+  "Born From This Ground",
+  "An anniversary publication by Lagos Rhythm, October 2026",
+  "Damola Olaleye",
+  "Deborah Ogunlolu",
+  "Nothing New Comes From Nowhere",
+  "Before We Called It New",
+  "When Home Has No Coordinates",
+  "The City Knows the Way",
+  "A Place Is Made of People",
+  "What If the Place Could Travel?",
+  "The Future Was Here First",
+  "the recognition gap",
+  "the source test: consent, credit, return",
+  "Street Rhythm",
+  "Storywell",
+  "oríkì",
+];
+
+/* Superseded drafts of this page. */
+const FORBIDDEN_COPY = [
+  "Year One by the Numbers",
+  "Moments That Defined Our First Year",
+  "The Echo Chamber",
+  "Curatorial Memorandum",
+  "A Note from the Foundation",
+];
+
 /* ---------------------------------------------------------------- utils --- */
 
 function collectRefs(html) {
@@ -147,6 +178,19 @@ for (const name of HTML_FILES) {
   for (const pattern of PLACEHOLDER_PATTERNS) {
     const match = html.match(pattern);
     if (match) errors.push(`${name}: placeholder / forbidden pattern -> "${match[0]}"`);
+  }
+
+  /* 4b — the edition's actual editorial copy must be intact ----------- */
+  if (name === "index.html") {
+    for (const required of REQUIRED_COPY) {
+      if (!html.includes(required)) errors.push(`${name}: missing editorial copy -> "${required}"`);
+    }
+    for (const removed of FORBIDDEN_COPY) {
+      if (html.includes(removed)) errors.push(`${name}: superseded copy still present -> "${removed}"`);
+    }
+    if ((html.match(/data-copy/g) || []).length < 3) {
+      errors.push(`${name}: expected the essay's pull quotes to remain copyable`);
+    }
   }
 
   /* 5 — CLS: every <img> declares width + height ----------------------- */

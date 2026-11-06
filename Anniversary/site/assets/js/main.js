@@ -96,14 +96,8 @@
   }
 
   /* ------------------------------------------------------------------
-     4. Copy the retrospective pull quote
+     4. Copy pull quotes — works for every quote on the page
      ------------------------------------------------------------------ */
-  var copyBtn = document.getElementById("copy-quote-btn");
-  var copyLabel = document.getElementById("quote-btn-text");
-  var copyIcon = document.getElementById("quote-icon");
-  var quoteEl = document.getElementById("retrospective-quote");
-  var resetTimer = null;
-
   function writeClipboard(text) {
     if (navigator.clipboard && window.isSecureContext) {
       return navigator.clipboard.writeText(text);
@@ -127,32 +121,39 @@
     });
   }
 
-  function setCopyState(copied) {
-    if (!copyBtn || !copyLabel || !copyIcon) return;
-    copyBtn.classList.toggle("is-copied", copied);
-    copyLabel.textContent = copied ? "Copied!" : "Copy Quote";
-    var use = copyIcon.querySelector("use");
-    if (use) use.setAttribute("href", copied ? "#i-check" : "#i-copy");
+  function setCopyState(btn, copied) {
+    var label = btn.querySelector("span");
+    var icon = btn.querySelector("svg use");
+    btn.classList.toggle("is-copied", copied);
+    if (label) label.textContent = copied ? "Copied!" : "Copy Quote";
+    if (icon) icon.setAttribute("href", copied ? "#i-check" : "#i-copy");
   }
 
-  if (copyBtn && quoteEl) {
-    copyBtn.addEventListener("click", function () {
-      var text =
-        quoteEl.textContent.trim() +
-        " — Lagos Rhythm Retrospective, 2026";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-copy]"), function (btn) {
+    btn.addEventListener("click", function () {
+      var figure = btn.closest ? btn.closest(".pullquote") : null;
+      var quote = figure && figure.querySelector("blockquote");
+      if (!quote) return;
+
+      var cite = figure.querySelector("cite");
+      var text = quote.textContent.trim();
+      if (cite) text += " " + cite.textContent.trim();
 
       writeClipboard(text)
         .then(function () {
-          setCopyState(true);
-          window.clearTimeout(resetTimer);
-          resetTimer = window.setTimeout(function () { setCopyState(false); }, 2200);
+          setCopyState(btn, true);
+          window.clearTimeout(btn._resetTimer);
+          btn._resetTimer = window.setTimeout(function () {
+            setCopyState(btn, false);
+          }, 2200);
         })
         .catch(function (err) {
           if (window.console) console.error("Copy failed:", err);
-          if (copyLabel) copyLabel.textContent = "Press ⌘/Ctrl+C";
+          var label = btn.querySelector("span");
+          if (label) label.textContent = "Press ⌘/Ctrl+C";
         });
     });
-  }
+  });
 
   /* ------------------------------------------------------------------
      5. Save as PDF (opens the browser print dialog)
