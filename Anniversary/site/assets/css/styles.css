@@ -241,7 +241,7 @@ em { font-style: italic; }
   padding-inline: var(--margin);
 }
 .wrap--narrow { max-width: 56rem; }   /* max-w-4xl */
-.wrap--feature { max-width: 64rem; }  /* max-w-5xl */
+.wrap--feature { max-width: var(--maxw); }  /* full editorial width */
 
 .band { padding-block: var(--band-pad); background: var(--surface); }
 .band--low { background: var(--sc-low); }
@@ -536,7 +536,7 @@ main { padding-top: var(--masthead-h); }
   gap: var(--space-sm);
   padding-bottom: var(--space-md);
   border-bottom: 1px solid var(--hairline);
-  max-width: 46rem;
+  max-width: 100%;
 }
 .sect-head--chapter h2 { text-wrap: balance; }
 
@@ -553,8 +553,8 @@ main { padding-top: var(--masthead-h); }
 }
 .prose p { text-align: justify; hyphens: auto; }
 
-/* Long-form measure: keeps the column at a readable ~70 characters */
-.prose--essay { max-width: 44rem; }
+/* Long-form measure: full width on desktop */
+.prose--essay { max-width: 100%; }
 
 /* Justification needs width to work with. Below the tablet breakpoint it
    only stretches word spacing, so phones read flush-left instead. */
@@ -625,7 +625,7 @@ main { padding-top: var(--masthead-h); }
    -------------------------------------------------------------------------- */
 .pullquote {
   margin-block: var(--space-md);
-  max-width: 46rem;
+  max-width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
