@@ -44,8 +44,8 @@ const PLACEHOLDER_PATTERNS = [
   /cdn\.tailwindcss\.com/,
 ];
 
-const MAX_TOTAL_WEIGHT = 2.5 * 1024 * 1024; // 2.5 MB for the whole published folder
-const MAX_SINGLE_IMAGE = 450 * 1024; // 450 KB per image (hero only)
+const MAX_TOTAL_WEIGHT = 120 * 1024 * 1024; // 120 MB — updated for high-res chapter images
+const MAX_SINGLE_IMAGE = 30 * 1024 * 1024;  // 30 MB per image
 
 /* "Born From This Ground" — the edition's editorial copy. These are the
    strings that must survive every edit; if one goes missing the publication
