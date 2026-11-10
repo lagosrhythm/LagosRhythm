@@ -28,6 +28,7 @@ const EXTERNAL_HOST_ALLOWLIST = [
   "youtube.com",
   "facebook.com",
   "linkedin.com",
+  "lnkd.in",
   "lagosrhythm.com",
   "twitter.com",
 ];
