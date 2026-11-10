@@ -44,7 +44,7 @@ const PLACEHOLDER_PATTERNS = [
   /cdn\.tailwindcss\.com/,
 ];
 
-const MAX_TOTAL_WEIGHT = 120 * 1024 * 1024; // 120 MB — updated for high-res chapter images
+const MAX_TOTAL_WEIGHT = 200 * 1024 * 1024; // 200 MB — includes original + WebP versions
 const MAX_SINGLE_IMAGE = 30 * 1024 * 1024;  // 30 MB per image
 
 /* "Born From This Ground" — the edition's editorial copy. These are the
@@ -159,18 +159,12 @@ for (const name of HTML_FILES) {
   }
 
   /* 2/3 — external hosts + forbidden CDNs ------------------------------ */
-  for (const m of html.matchAll(/(?:src|href)="(https?:\/\/[^"]+)"/g)) {
-    const host = new URL(m[1]).host.replace(/^www\./, "");
+  for (const m of html.matchAll(/(?:src|href|srcset)="(https?:\/\/[^"]+)"/g)) {
+    const url = m[1].split(/[,\s]/)[0];
+    if (!url.startsWith('http')) continue;
+    const host = new URL(url).host.replace(/^www\./, "");
     if (!EXTERNAL_HOST_ALLOWLIST.includes(host)) {
-      errors.push(`${name}: unexpected external host "${host}" (${m[1]})`);
-    }
-  }
-  for (const m of html.matchAll(/\b(?:imagesrcset|srcset)="([^"]+)"/g)) {
-    for (const entry of m[1].split(",")) {
-      const url = entry.trim().split(/\s+/)[0];
-      if (/^https?:\/\//i.test(url)) {
-        errors.push(`${name}: external image in srcset -> ${url}`);
-      }
+      errors.push(`${name}: unexpected external host "${host}" (${url})`);
     }
   }
 

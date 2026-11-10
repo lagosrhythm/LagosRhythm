@@ -20,5 +20,8 @@
     "editorial",
     "static-site",
     "vercel"
-  ]
+  ],
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  }
 }
