@@ -2,7 +2,7 @@
 /**
  * Converts all chapter images + hero to WebP at a capped display width.
  * Output lands alongside the originals as <name>.webp
- * Hero: 1500px wide max, quality 85
+ * Hero: 1280px wide max, quality 85
  * Chapter images: 1280px wide max, quality 82
  */
 import sharp from "sharp";
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 const IMG = resolve(dirname(fileURLToPath(import.meta.url)), "..", "assets", "img");
 
 const jobs = [
-  { file: "hero.png",      width: 1500, quality: 85 },
+  { file: "hero.jpg",      width: 1280, quality: 85 },
   { file: "ch1-image.jpg", width: 1280, quality: 82 },
   { file: "ch2-image.jpg", width: 1280, quality: 82 },
   { file: "ch3-image.jpg", width: 1280, quality: 82 },
