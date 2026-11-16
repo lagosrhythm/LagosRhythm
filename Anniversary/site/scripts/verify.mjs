@@ -116,6 +116,9 @@ function isFragment(ref) {
 
 async function walk(dir, out = []) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
+    // Dev dependencies and VCS metadata are never published — don't let them
+    // inflate the file count or the weight budget.
+    if (entry.isDirectory() && (entry.name === "node_modules" || entry.name === ".git")) continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) await walk(full, out);
     else out.push(full);
